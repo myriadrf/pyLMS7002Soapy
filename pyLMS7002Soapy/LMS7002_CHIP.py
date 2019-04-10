@@ -1,21 +1,23 @@
-#***************************************************************
-#* Name:      LMS7002_CHIP.py
-#* Purpose:   Class implementing LMS7002 general functions
-#* Author:    Lime Microsystems ()
-#* Created:   2016-11-14
-#* Copyright: Lime Microsystems (limemicro.com)
-#* License:
-#**************************************************************
+# ***************************************************************
+# * Name:      LMS7002_CHIP.py
+# * Purpose:   Class implementing LMS7002 general functions
+# * Author:    Lime Microsystems ()
+# * Created:   2016-11-14
+# * Copyright: Lime Microsystems (limemicro.com)
+# * License:
+# **************************************************************
 
-from LMS7002_base import *
+from pyLMS7002Soapy.LMS7002_base import LMS7002_base
+
 
 class LMS7002_CHIP(LMS7002_base):
-    __slots__ = []    # Used to generate error on typos
+    __slots__ = []  # Used to generate error on typos
+
     def __init__(self, chip):
         self.chip = chip
         self.channel = None
         self.prefix = ""
-        
+
     def getChipInfo(self):
         """
         Get the chip info.
@@ -25,15 +27,14 @@ class LMS7002_CHIP(LMS7002_base):
         VER = reg['VER<4:0>']
         REV = reg['REV<4:0>']
         MASK = reg['MASK<5:0>']
-        return (VER, REV, MASK)
+        return VER, REV, MASK
 
-            
     #
     # CHIPCFG (0x0020)
     #
-    
+
     # LRST_TX_B
-    @property 
+    @property
     def LRST_TX_B(self):
         """
         Get the value of LRST_TX_B
@@ -50,7 +51,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'LRST_TX_B', value)
 
     # MRST_TX_B
-    @property 
+    @property
     def MRST_TX_B(self):
         """
         Get the value of MRST_TX_B
@@ -67,7 +68,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'MRST_TX_B', value)
 
     # LRST_TX_A
-    @property 
+    @property
     def LRST_TX_A(self):
         """
         Get the value of LRST_TX_A
@@ -84,7 +85,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'LRST_TX_A', value)
 
     # MRST_TX_A
-    @property 
+    @property
     def MRST_TX_A(self):
         """
         Get the value of MRST_TX_A
@@ -101,7 +102,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'MRST_TX_A', value)
 
     # LRST_RX_B
-    @property 
+    @property
     def LRST_RX_B(self):
         """
         Get the value of LRST_RX_B
@@ -118,7 +119,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'LRST_RX_B', value)
 
     # MRST_RX_B
-    @property 
+    @property
     def MRST_RX_B(self):
         """
         Get the value of MRST_RX_B
@@ -135,7 +136,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'MRST_RX_B', value)
 
     # LRST_RX_A
-    @property 
+    @property
     def LRST_RX_A(self):
         """
         Get the value of LRST_RX_A
@@ -152,7 +153,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'LRST_RX_A', value)
 
     # MRST_RX_A
-    @property 
+    @property
     def MRST_RX_A(self):
         """
         Get the value of MRST_RX_A
@@ -169,7 +170,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'MRST_RX_A', value)
 
     # SRST_RXFIFO
-    @property 
+    @property
     def SRST_RXFIFO(self):
         """
         Get the value of SRST_RXFIFO
@@ -186,7 +187,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'SRST_RXFIFO', value)
 
     # SRST_TXFIFO
-    @property 
+    @property
     def SRST_TXFIFO(self):
         """
         Get the value of SRST_TXFIFO
@@ -203,7 +204,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'SRST_TXFIFO', value)
 
     # RXEN_B
-    @property 
+    @property
     def RXEN_B(self):
         """
         Get the value of RXEN_B
@@ -220,7 +221,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'RXEN_B', value)
 
     # RXEN_A
-    @property 
+    @property
     def RXEN_A(self):
         """
         Get the value of RXEN_A
@@ -237,7 +238,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'RXEN_A', value)
 
     # TXEN_B
-    @property 
+    @property
     def TXEN_B(self):
         """
         Get the value of TXEN_B
@@ -254,7 +255,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('CHIPCFG', 'TXEN_B', value)
 
     # TXEN_A
-    @property 
+    @property
     def TXEN_A(self):
         """
         Get the value of TXEN_A
@@ -275,7 +276,7 @@ class LMS7002_CHIP(LMS7002_base):
     #
 
     # TXTSPCLKA_DIV<7:0>
-    @property 
+    @property
     def TXTSPCLKA_DIV(self):
         """
         Get the value of TXTSPCLKA_DIV<7:0>
@@ -287,12 +288,12 @@ class LMS7002_CHIP(LMS7002_base):
         """
         Set the value of TXTSPCLKA_DIV<7:0>
         """
-        if not(0<= value <=255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('TSPCFG', 'TXTSPCLKA_DIV<7:0>', value)
 
     # RXTSPCLKA_DIV<7:0>
-    @property 
+    @property
     def RXTSPCLKA_DIV(self):
         """
         Get the value of RXTSPCLKA_DIV<7:0>
@@ -304,25 +305,24 @@ class LMS7002_CHIP(LMS7002_base):
         """
         Set the value of RXTSPCLKA_DIV<7:0>
         """
-        if not(0<= value <=255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('TSPCFG', 'RXTSPCLKA_DIV<7:0>', value)
-
 
     #
     # EN_DIR (0x0081)
     #
 
     # TRX_GAIN_SRC
-    @property 
+    @property
     def TRX_GAIN_SRC(self):
         """
         Get the value of TRX_GAIN_SRC
         """
-        if self.chip.chipID == self.chip.chipIDMR3:        
+        if self.chip.chipID == self.chip.chipIDMR3:
             return self._readReg('EN_DIR', 'TRX_GAIN_SRC')
         else:
-            raise ValueError("Bitfield TRX_GAIN_SRC is not supported on chip version "+str(self.chip.chipID))
+            raise ValueError("Bitfield TRX_GAIN_SRC is not supported on chip version " + str(self.chip.chipID))
 
     @TRX_GAIN_SRC.setter
     def TRX_GAIN_SRC(self, value):
@@ -332,12 +332,12 @@ class LMS7002_CHIP(LMS7002_base):
         if self.chip.chipID == self.chip.chipIDMR3:
             if value not in [0, 1]:
                 raise ValueError("Value must be [0,1]")
-            self._writeReg('EN_DIR', 'TRX_GAIN_SRC', value)        
+            self._writeReg('EN_DIR', 'TRX_GAIN_SRC', value)
         else:
-            raise ValueError("Bitfield TRX_GAIN_SRC is not supported on chip version "+str(self.chip.chipID))
+            raise ValueError("Bitfield TRX_GAIN_SRC is not supported on chip version " + str(self.chip.chipID))
 
     # EN_DIR_LDO
-    @property 
+    @property
     def EN_DIR_LDO(self):
         """
         Get the value of EN_DIR_LDO
@@ -354,7 +354,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('EN_DIR', 'EN_DIR_LDO', value)
 
     # EN_DIR_CGEN
-    @property 
+    @property
     def EN_DIR_CGEN(self):
         """
         Get the value of EN_DIR_CGEN
@@ -371,7 +371,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('EN_DIR', 'EN_DIR_CGEN', value)
 
     # EN_DIR_XBUF
-    @property 
+    @property
     def EN_DIR_XBUF(self):
         """
         Get the value of EN_DIR_XBUF
@@ -388,7 +388,7 @@ class LMS7002_CHIP(LMS7002_base):
         self._writeReg('EN_DIR', 'EN_DIR_XBUF', value)
 
     # EN_DIR_AFE
-    @property 
+    @property
     def EN_DIR_AFE(self):
         """
         Get the value of EN_DIR_AFE
@@ -403,6 +403,3 @@ class LMS7002_CHIP(LMS7002_base):
         if value not in [0, 1]:
             raise ValueError("Value must be [0,1]")
         self._writeReg('EN_DIR', 'EN_DIR_AFE', value)
-
-    
-    

@@ -1,27 +1,29 @@
-#***************************************************************
-#* Name:      LMS7002_IO.py
-#* Purpose:   Class implementing LMS7002 IO functions
-#* Author:    Lime Microsystems ()
-#* Created:   2016-11-14
-#* Copyright: Lime Microsystems (limemicro.com)
-#* License:
-#**************************************************************
+# ***************************************************************
+# * Name:      LMS7002_IO.py
+# * Purpose:   Class implementing LMS7002 IO functions
+# * Author:    Lime Microsystems ()
+# * Created:   2016-11-14
+# * Copyright: Lime Microsystems (limemicro.com)
+# * License:
+# **************************************************************
 
-from LMS7002_base import *
+from pyLMS7002Soapy.LMS7002_base import LMS7002_base
+
 
 class LMS7002_IO(LMS7002_base):
-    __slots__=[]    # Used to generate error on typos
+    __slots__ = []  # Used to generate error on typos
+
     def __init__(self, chip):
         self.chip = chip
         self.channel = None
         self.prefix = ""
-                
+
     #
     # IOCFG0 (0x0021)
     #
-    
+
     # TX_CLK_PE
-    @property 
+    @property
     def TX_CLK_PE(self):
         """
         Get the value of TX_CLK_PE
@@ -38,7 +40,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'TX_CLK_PE', value)
 
     # RX_CLK_PE
-    @property 
+    @property
     def RX_CLK_PE(self):
         """
         Get the value of RX_CLK_PE
@@ -55,7 +57,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'RX_CLK_PE', value)
 
     # SDA_PE
-    @property 
+    @property
     def SDA_PE(self):
         """
         Get the value of SDA_PE
@@ -72,7 +74,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'SDA_PE', value)
 
     # SDA_DS
-    @property 
+    @property
     def SDA_DS(self):
         """
         Get the value of SDA_DS
@@ -89,7 +91,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'SDA_DS', value)
 
     # SCL_PE
-    @property 
+    @property
     def SCL_PE(self):
         """
         Get the value of SCL_PE
@@ -106,7 +108,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'SCL_PE', value)
 
     # SCL_DS
-    @property 
+    @property
     def SCL_DS(self):
         """
         Get the value of SCL_DS
@@ -123,7 +125,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'SCL_DS', value)
 
     # SDIO_DS
-    @property 
+    @property
     def SDIO_DS(self):
         """
         Get the value of SDIO_DS
@@ -140,7 +142,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'SDIO_DS', value)
 
     # SDIO_PE
-    @property 
+    @property
     def SDIO_PE(self):
         """
         Get the value of SDIO_PE
@@ -157,7 +159,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'SDIO_PE', value)
 
     # SDO_PE
-    @property 
+    @property
     def SDO_PE(self):
         """
         Get the value of SDO_PE
@@ -174,7 +176,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'SDO_PE', value)
 
     # SCLK_PE
-    @property 
+    @property
     def SCLK_PE(self):
         """
         Get the value of SCLK_PE
@@ -191,7 +193,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'SCLK_PE', value)
 
     # SEN_PE
-    @property 
+    @property
     def SEN_PE(self):
         """
         Get the value of SEN_PE
@@ -208,7 +210,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG0', 'SEN_PE', value)
 
     # SPIMODE
-    @property 
+    @property
     def SPIMODE(self):
         """
         Get the value of SPIMODE
@@ -229,7 +231,7 @@ class LMS7002_IO(LMS7002_base):
     #
 
     # LML2_TRXIQPULSE
-    @property 
+    @property
     def LML2_TRXIQPULSE(self):
         """
         Get the value of LML2_TRXIQPULSE
@@ -237,8 +239,7 @@ class LMS7002_IO(LMS7002_base):
         if self.chip.chipID == self.chip.chipIDMR3:
             return self._readReg('IOCFG1', 'LML2_TRXIQPULSE')
         else:
-            raise ValueError("Bitfield LML2_TRXIQPULSE is not supported on chip version "+str(self.chip.chipID))
-
+            raise ValueError("Bitfield LML2_TRXIQPULSE is not supported on chip version " + str(self.chip.chipID))
 
     @LML2_TRXIQPULSE.setter
     def LML2_TRXIQPULSE(self, value):
@@ -250,10 +251,10 @@ class LMS7002_IO(LMS7002_base):
                 raise ValueError("Value must be [0,1]")
             self._writeReg('IOCFG1', 'LML2_TRXIQPULSE', value)
         else:
-            raise ValueError("Bitfield LML2_TRXIQPULSE is not supported on chip version "+str(self.chip.chipID))
+            raise ValueError("Bitfield LML2_TRXIQPULSE is not supported on chip version " + str(self.chip.chipID))
 
     # LML2_SISODDR
-    @property 
+    @property
     def LML2_SISODDR(self):
         """
         Get the value of LML2_SISODDR
@@ -261,8 +262,7 @@ class LMS7002_IO(LMS7002_base):
         if self.chip.chipID == self.chip.chipIDMR3:
             return self._readReg('IOCFG1', 'LML2_SISODDR')
         else:
-            raise ValueError("Bitfield LML2_SISODDR is not supported on chip version "+str(self.chip.chipID))
-
+            raise ValueError("Bitfield LML2_SISODDR is not supported on chip version " + str(self.chip.chipID))
 
     @LML2_SISODDR.setter
     def LML2_SISODDR(self, value):
@@ -274,10 +274,10 @@ class LMS7002_IO(LMS7002_base):
                 raise ValueError("Value must be [0,1]")
             self._writeReg('IOCFG1', 'LML2_SISODDR', value)
         else:
-            raise ValueError("Bitfield LML2_SISODDR is not supported on chip version "+str(self.chip.chipID))
+            raise ValueError("Bitfield LML2_SISODDR is not supported on chip version " + str(self.chip.chipID))
 
     # LML1_TRXIQPULSE
-    @property 
+    @property
     def LML1_TRXIQPULSE(self):
         """
         Get the value of LML1_TRXIQPULSE
@@ -285,8 +285,7 @@ class LMS7002_IO(LMS7002_base):
         if self.chip.chipID == self.chip.chipIDMR3:
             return self._readReg('IOCFG1', 'LML1_TRXIQPULSE')
         else:
-            raise ValueError("Bitfield LML1_TRXIQPULSE is not supported on chip version "+str(self.chip.chipID))
-
+            raise ValueError("Bitfield LML1_TRXIQPULSE is not supported on chip version " + str(self.chip.chipID))
 
     @LML1_TRXIQPULSE.setter
     def LML1_TRXIQPULSE(self, value):
@@ -298,10 +297,10 @@ class LMS7002_IO(LMS7002_base):
                 raise ValueError("Value must be [0,1]")
             self._writeReg('IOCFG1', 'LML1_TRXIQPULSE', value)
         else:
-            raise ValueError("Bitfield LML1_TRXIQPULSE is not supported on chip version "+str(self.chip.chipID))
+            raise ValueError("Bitfield LML1_TRXIQPULSE is not supported on chip version " + str(self.chip.chipID))
 
     # LML1_SISODDR
-    @property 
+    @property
     def LML1_SISODDR(self):
         """
         Get the value of LML1_SISODDR
@@ -309,8 +308,7 @@ class LMS7002_IO(LMS7002_base):
         if self.chip.chipID == self.chip.chipIDMR3:
             return self._readReg('IOCFG1', 'LML1_SISODDR')
         else:
-            raise ValueError("Bitfield LML1_SISODDR is not supported on chip version "+str(self.chip.chipID))
-
+            raise ValueError("Bitfield LML1_SISODDR is not supported on chip version " + str(self.chip.chipID))
 
     @LML1_SISODDR.setter
     def LML1_SISODDR(self, value):
@@ -322,10 +320,10 @@ class LMS7002_IO(LMS7002_base):
                 raise ValueError("Value must be [0,1]")
             self._writeReg('IOCFG1', 'LML1_SISODDR', value)
         else:
-            raise ValueError("Bitfield LML1_SISODDR is not supported on chip version "+str(self.chip.chipID))
+            raise ValueError("Bitfield LML1_SISODDR is not supported on chip version " + str(self.chip.chipID))
 
     # DIQ2_DS
-    @property 
+    @property
     def DIQ2_DS(self):
         """
         Get the value of DIQ2_DS
@@ -342,7 +340,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'DIQ2_DS', value)
 
     # DIQ2_PE
-    @property 
+    @property
     def DIQ2_PE(self):
         """
         Get the value of DIQ2_PE
@@ -359,7 +357,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'DIQ2_PE', value)
 
     # IQ_SEL_EN_2_PE
-    @property 
+    @property
     def IQ_SEL_EN_2_PE(self):
         """
         Get the value of IQ_SEL_EN_2_PE
@@ -376,7 +374,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'IQ_SEL_EN_2_PE', value)
 
     # TXNRX2_PE
-    @property 
+    @property
     def TXNRX2_PE(self):
         """
         Get the value of TXNRX2_PE
@@ -393,7 +391,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'TXNRX2_PE', value)
 
     # FCLK2_PE
-    @property 
+    @property
     def FCLK2_PE(self):
         """
         Get the value of FCLK2_PE
@@ -410,7 +408,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'FCLK2_PE', value)
 
     # MCLK2_PE
-    @property 
+    @property
     def MCLK2_PE(self):
         """
         Get the value of MCLK2_PE
@@ -427,7 +425,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'MCLK2_PE', value)
 
     # DIQ1_DS
-    @property 
+    @property
     def DIQ1_DS(self):
         """
         Get the value of DIQ1_DS
@@ -444,7 +442,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'DIQ1_DS', value)
 
     # DIQ1_PE
-    @property 
+    @property
     def DIQ1_PE(self):
         """
         Get the value of DIQ1_PE
@@ -461,7 +459,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'DIQ1_PE', value)
 
     # IQ_SEL_EN_1_PE
-    @property 
+    @property
     def IQ_SEL_EN_1_PE(self):
         """
         Get the value of IQ_SEL_EN_1_PE
@@ -478,7 +476,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'IQ_SEL_EN_1_PE', value)
 
     # TXNRX1_PE
-    @property 
+    @property
     def TXNRX1_PE(self):
         """
         Get the value of TXNRX1_PE
@@ -495,7 +493,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'TXNRX1_PE', value)
 
     # FCLK1_PE
-    @property 
+    @property
     def FCLK1_PE(self):
         """
         Get the value of FCLK1_PE
@@ -512,7 +510,7 @@ class LMS7002_IO(LMS7002_base):
         self._writeReg('IOCFG1', 'FCLK1_PE', value)
 
     # MCLK1_PE
-    @property 
+    @property
     def MCLK1_PE(self):
         """
         Get the value of MCLK1_PE
@@ -527,7 +525,3 @@ class LMS7002_IO(LMS7002_base):
         if value not in [0, 1]:
             raise ValueError("Value must be [0,1]")
         self._writeReg('IOCFG1', 'MCLK1_PE', value)
-
-
-
-    

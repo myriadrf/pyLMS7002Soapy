@@ -1,35 +1,38 @@
 import SoapySDR
-from SoapySDR import * #SOAPY_SDR_* constants
-from LMS7002 import *
-from weakproxy import *
+from SoapySDR import *  # SOAPY_SDR_* constants
+from pyLMS7002Soapy.LMS7002 import LMS7002
+from pyLMS7002Soapy.weakproxy import Proxy
 from timeit import default_timer as timer
 import atexit
+
 
 #######################################
 # Board class
 #######################################
 
+
 class pyLMS7002Soapy(object):
-    def __init__(self,verbose=0):
+    def __init__(self, verbose=0):
         self.verbose = verbose
         SDR_ARGS = {'driver': 'lime'}
         self.sdr = SoapySDR.Device(SDR_ARGS)
         self._tdd = False
         self.fRef = 0
-        if self.sdr.__str__()=="FT601:LimeSDR-Mini":
+        if self.sdr.__str__() == "FT601:LimeSDR-Mini":
             self.boardName = "LimeSDRMini"
-        elif self.sdr.__str__()=="FX3:LimeSDR-USB":
+        elif self.sdr.__str__() == "FX3:LimeSDR-USB":
             self.boardName = "LimeSDR"
         else:
-            raise ValueError("Unsupported board : "+boardName)
-        self.LMS7002 = LMS7002(SPIwriteFn=Proxy(self.LMS7002_Write), SPIreadFn=Proxy(self.LMS7002_Read)
-                               , verbose=verbose, MCUProgram=Proxy(self.MCUProgram), fRef = self.fRef)
+            raise ValueError("Unsupported board : " + self.boardName)
+        self.LMS7002 = LMS7002(SPIwriteFn=self.LMS7002_Write, SPIreadFn=self.LMS7002_Read
+                               , verbose=verbose, MCUProgram=self.MCUProgram, fRef=self.fRef)
         self.channel = 0
-        self.previousBand = [None,None]
+        self.previousBand = [None, None]
 
-    def log(self, logMsg):
+    @staticmethod
+    def log(logMsg):
         print(logMsg)
-   
+
     #
     # Configure antenna
     #
@@ -39,7 +42,7 @@ class pyLMS7002Soapy(object):
         Select the appropriate RX and TX interfaces based on operating frequency.
         """
         if self.boardName == "LimeSDRMini":
-            if frequency>=2e9:
+            if frequency >= 2e9:
                 band = "HIGH"
             else:
                 band = "LOW"
@@ -48,16 +51,16 @@ class pyLMS7002Soapy(object):
             else:
                 self.previousBand[self.channel] = band
 
-            if frequency>=2e9:
+            if frequency >= 2e9:
                 self.sdr.setAntenna(SOAPY_SDR_TX, self.channel, 'BAND1')
             else:
                 self.sdr.setAntenna(SOAPY_SDR_TX, self.channel, 'BAND2')
-            if frequency>=2e9:
+            if frequency >= 2e9:
                 self.sdr.setAntenna(SOAPY_SDR_RX, self.channel, 'LNAH')
             else:
                 self.sdr.setAntenna(SOAPY_SDR_RX, self.channel, 'LNAW')
         elif self.boardName == "LimeSDR":
-            if frequency>=1.5e9:
+            if frequency >= 1.5e9:
                 band = "HIGH"
             else:
                 band = "LOW"
@@ -66,16 +69,16 @@ class pyLMS7002Soapy(object):
             else:
                 self.previousBand[self.channel] = band
 
-            if frequency>=1.5e9:
+            if frequency >= 1.5e9:
                 self.sdr.setAntenna(SOAPY_SDR_TX, self.channel, 'BAND2')
             else:
                 self.sdr.setAntenna(SOAPY_SDR_TX, self.channel, 'BAND1')
-            if frequency>=1.5e9:
+            if frequency >= 1.5e9:
                 self.sdr.setAntenna(SOAPY_SDR_RX, self.channel, 'LNAH')
             else:
                 self.sdr.setAntenna(SOAPY_SDR_RX, self.channel, 'LNAL')
         else:
-            raise ValueError('Unsupported board : '+boardName)
+            raise ValueError('Unsupported board : ' + self.boardName)
 
     #
     # TX RF frequency
@@ -92,16 +95,17 @@ class pyLMS7002Soapy(object):
     #
     # TX NCO frequency
     #
-    
+
     @property
     def txNCOFreq(self):
-        return self.sdr.getFrequency(SOAPY_SDR_TX, self.channel, 'BB')    
+        return self.sdr.getFrequency(SOAPY_SDR_TX, self.channel, 'BB')
 
     @txNCOFreq.setter
     def txNCOFreq(self, freq):
-        self.sdr.setFrequency(SOAPY_SDR_TX, self.channel, 'BB', freq)    
+        self.sdr.setFrequency(SOAPY_SDR_TX, self.channel, 'BB', freq)
 
-    #
+        #
+
     # RX RF frequency
     #
 
@@ -123,14 +127,15 @@ class pyLMS7002Soapy(object):
 
     @rxNCOFreq.setter
     def rxNCOFreq(self, freq):
-        self.sdr.setFrequency(SOAPY_SDR_RX, self.channel, 'BB', freq)    
+        self.sdr.setFrequency(SOAPY_SDR_RX, self.channel, 'BB', freq)
 
-    #
+        #
+
     # Test signal
     #
 
     def testSignalDC(self, I, Q):
-        if self.channel==0:
+        if self.channel == 0:
             chan = 'A'
         else:
             chan = 'B'
@@ -141,12 +146,12 @@ class pyLMS7002Soapy(object):
     #
     # TDD mode
     #
-    
+
     @property
     def tddMode(self):
         return self._tdd
-    
-    @tddMode.setter        
+
+    @tddMode.setter
     def tddMode(self, tdd):
         """
         Put the chip in TDD mode.
@@ -227,22 +232,20 @@ class pyLMS7002Soapy(object):
     @txBandwidth.setter
     def txBandwidth(self, val):
         self.sdr.setBandwidth(SOAPY_SDR_TX, 0, val)
-            
-        
+
     #########################
     # Low level functions
     #########################        
 
-
     def readRegister(self, register, chip="RFIC0"):
-        val = self.sdr.readRegister(chip, register)    
-        if self.verbose>10:
-            self.log("rd "+hex(val)+" from "+hex(register))
+        val = self.sdr.readRegister(chip, register)
+        if self.verbose > 10:
+            self.log("rd " + hex(val) + " from " + hex(register))
         return val
-    
+
     def writeRegister(self, register, value, chip="RFIC0"):
-        if self.verbose>10:
-            self.log("wr "+hex(value)+" to "+hex(register))
+        if self.verbose > 10:
+            self.log("wr " + hex(value) + " to " + hex(register))
         self.sdr.writeRegister(chip, register, value)
 
     def getLMS7002(self):
@@ -258,7 +261,7 @@ class pyLMS7002Soapy(object):
         for reg in regList:
             regAddr, regData = reg
             self.writeRegister(regAddr, regData, chip)
-        
+
     def LMS7002_Read(self, regList, chip="RFIC0"):
         """
         Read the data from LMS7002 via SPI interface.
@@ -277,20 +280,21 @@ class pyLMS7002Soapy(object):
 
     def MCUProgram(self, mcuProgram, Mode):
         ver, rev, mask = self.getLMS7002().chipInfo
-        if mask==1:
+        if mask == 1:
             # MCU has 16k RAM
-            if len(mcuProgram)>16384:
-                raise ValueError("MCU program for mask 1 chips must be less than 16 kB. Given program size:"+str(len(mcuProgram)))
-            if len(mcuProgram)==8192: # Check if program is 8k
-                mcuProgram += [0]*8192 # Extend it to 16k
+            if len(mcuProgram) > 16384:
+                raise ValueError(
+                    "MCU program for mask 1 chips must be less than 16 kB. Given program size:" + str(len(mcuProgram)))
+            if len(mcuProgram) == 8192:  # Check if program is 8k
+                mcuProgram += [0] * 8192  # Extend it to 16k
             self._MCUProgram_Direct(mcuProgram, Mode)
         else:
             # MCU has 8k RAM
-            if len(mcuProgram)>8192:
-                raise ValueError("MCU program for mask 0 chips must be less than 8 kB. Given program size:"+str(len(mcuProgram)))
+            if len(mcuProgram) > 8192:
+                raise ValueError(
+                    "MCU program for mask 0 chips must be less than 8 kB. Given program size:" + str(len(mcuProgram)))
             self._MCUProgram_Direct(mcuProgram, Mode)
-        
-            
+
     def _MCUProgram_Direct(self, mcuProgram, Mode):
         """
         Write the data to LMS7002 MCU via SPI interface.
@@ -298,40 +302,40 @@ class pyLMS7002Soapy(object):
         mcuProgram is 8192 or 16384 bytes long array holding the MCU program.
         mode selects the MCU programming mode.
         """
-        if Mode not in [0, 1,2,3, 'EEPROM_AND_SRAM', 'SRAM', 'SRAM_FROM_EEPROM']:
+        if Mode not in [0, 1, 2, 3, 'EEPROM_AND_SRAM', 'SRAM', 'SRAM_FROM_EEPROM']:
             raise ValueError("Mode should be [1,2,3, 'EEPROM_AND_SRAM', 'SRAM', 'SRAM_FROM_EEPROM']")
-        if Mode==0:
+        if Mode == 0:
             return
-        elif Mode==1 or Mode=='EEPROM_AND_SRAM':
+        elif Mode == 1 or Mode == 'EEPROM_AND_SRAM':
             mode = 1
-        elif Mode==2 or Mode=='SRAM':
+        elif Mode == 2 or Mode == 'SRAM':
             mode = 2
         else:
             mode = 3
 
-        if len(mcuProgram)!=8192 and len(mcuProgram)!=16384:
+        if len(mcuProgram) != 8192 and len(mcuProgram) != 16384:
             raise ValueError("MCU program should be 8192 or 16384 bytes long")
-        
-        toSend = [ (2, 0), (2, mode)] # Write 0 to address 2, write mode to address 2 (mSPI_CTRL)
+
+        toSend = [(2, 0), (2, mode)]  # Write 0 to address 2, write mode to address 2 (mSPI_CTRL)
         self.LMS7002_Write(toSend)
         lms7002 = self.getLMS7002()
 
         pos = 0
-        while pos<len(mcuProgram):
+        while pos < len(mcuProgram):
             startTime = timer()
-            while lms7002.mSPI.EMPTY_WRITE_BUFF==0:
-                if timer()-startTime>1:
+            while lms7002.mSPI.EMPTY_WRITE_BUFF == 0:
+                if timer() - startTime > 1:
                     raise IOError("MCU programming timeout")
 
             for j in range(0, 4):
                 toSend = []
                 for i in range(0, 8):
-                    toSend.append( (4, mcuProgram[pos]) )
+                    toSend.append((4, mcuProgram[pos]))
                     pos += 1
                 self.LMS7002_Write(toSend)
-            if mode==3:
+            if mode == 3:
                 break
         startTime = timer()
-        while lms7002.mSPI.PROGRAMMED==0:
-            if timer()-startTime>1:
-                raise IOError("MCU programming timeout")        
+        while lms7002.mSPI.PROGRAMMED == 0:
+            if timer() - startTime > 1:
+                raise IOError("MCU programming timeout")

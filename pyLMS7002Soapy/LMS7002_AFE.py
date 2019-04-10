@@ -1,27 +1,29 @@
-#***************************************************************
-#* Name:      LMS7002_AFE.py
-#* Purpose:   Class implementing LMS7002 AFE functions
-#* Author:    Lime Microsystems ()
-#* Created:   2016-11-14
-#* Copyright: Lime Microsystems (limemicro.com)
-#* License:
-#**************************************************************
+# ***************************************************************
+# * Name:      LMS7002_AFE.py
+# * Purpose:   Class implementing LMS7002 AFE functions
+# * Author:    Lime Microsystems ()
+# * Created:   2016-11-14
+# * Copyright: Lime Microsystems (limemicro.com)
+# * License:
+# **************************************************************
 
-from LMS7002_base import *
+from pyLMS7002Soapy.LMS7002_base import LMS7002_base
+
 
 class LMS7002_AFE(LMS7002_base):
     __slots__ = []  # Used to generate error on typos
+
     def __init__(self, chip):
         self.chip = chip
         self.channel = None
         self.prefix = "AFE_"
-        
+
     #
     # AFE_CFG (0x0082)
     #
 
     # ISEL_DAC_AFE<2:0>
-    @property 
+    @property
     def ISEL_DAC_AFE(self):
         """
         Get the value of ISEL_DAC_AFE<2:0>
@@ -33,12 +35,12 @@ class LMS7002_AFE(LMS7002_base):
         """
         Set the value of ISEL_DAC_AFE<2:0>
         """
-        if not(0 <= value <= 7):
+        if not (0 <= value <= 7):
             raise ValueError("Value must be [0..7]")
         self._writeReg('CFG', 'ISEL_DAC_AFE<2:0>', value)
 
     # MODE_INTERLEAVE_AFE
-    @property 
+    @property
     def MODE_INTERLEAVE_AFE(self):
         """
         Get the value of MODE_INTERLEAVE_AFE
@@ -55,7 +57,7 @@ class LMS7002_AFE(LMS7002_base):
         self._writeReg('CFG', 'MODE_INTERLEAVE_AFE', value)
 
     # MUX_AFE_1<1:0>
-    @property 
+    @property
     def MUX_AFE_1(self):
         """
         Get the value of MUX_AFE_1<1:0>
@@ -67,12 +69,12 @@ class LMS7002_AFE(LMS7002_base):
         """
         Set the value of MUX_AFE_1<1:0>
         """
-        if not(0 <= value <= 3):
+        if not (0 <= value <= 3):
             raise ValueError("Value must be [0..3]")
         self._writeReg('CFG', 'MUX_AFE_1<1:0>', value)
-    
+
     # MUX_AFE_2<1:0>
-    @property 
+    @property
     def MUX_AFE_2(self):
         """
         Get the value of MUX_AFE_2<1:0>
@@ -84,12 +86,12 @@ class LMS7002_AFE(LMS7002_base):
         """
         Set the value of MUX_AFE_2<1:0>
         """
-        if not(0 <= value <= 3):
+        if not (0 <= value <= 3):
             raise ValueError("Value must be [0..3]")
         self._writeReg('CFG', 'MUX_AFE_2<1:0>', value)
 
     # PD_AFE
-    @property 
+    @property
     def PD_AFE(self):
         """
         Get the value of PD_AFE
@@ -106,7 +108,7 @@ class LMS7002_AFE(LMS7002_base):
         self._writeReg('CFG', 'PD_AFE', value)
 
     # PD_RX_AFE1
-    @property 
+    @property
     def PD_RX_AFE1(self):
         """
         Get the value of PD_RX_AFE1
@@ -123,7 +125,7 @@ class LMS7002_AFE(LMS7002_base):
         self._writeReg('CFG', 'PD_RX_AFE1', value)
 
     # PD_RX_AFE2
-    @property 
+    @property
     def PD_RX_AFE2(self):
         """
         Get the value of PD_RX_AFE2
@@ -140,7 +142,7 @@ class LMS7002_AFE(LMS7002_base):
         self._writeReg('CFG', 'PD_RX_AFE2', value)
 
     # PD_TX_AFE1
-    @property 
+    @property
     def PD_TX_AFE1(self):
         """
         Get the value of PD_TX_AFE1
@@ -157,7 +159,7 @@ class LMS7002_AFE(LMS7002_base):
         self._writeReg('CFG', 'PD_TX_AFE1', value)
 
     # PD_TX_AFE2
-    @property 
+    @property
     def PD_TX_AFE2(self):
         """
         Get the value of PD_TX_AFE2
@@ -174,7 +176,7 @@ class LMS7002_AFE(LMS7002_base):
         self._writeReg('CFG', 'PD_TX_AFE2', value)
 
     # EN_G_AFE
-    @property 
+    @property
     def EN_G_AFE(self):
         """
         Get the value of EN_G_AFE
@@ -189,6 +191,3 @@ class LMS7002_AFE(LMS7002_base):
         if value not in [0, 1]:
             raise ValueError("Value must be [0,1]")
         self._writeReg('CFG', 'EN_G_AFE', value)
-
-
-

@@ -1,16 +1,18 @@
-#***************************************************************
-#* Name:      LMS7002_RFE.py
-#* Purpose:   Class implementing LMS7002 RFE functions
-#* Author:    Lime Microsystems ()
-#* Created:   2016-11-14
-#* Copyright: Lime Microsystems (limemicro.com)
-#* License:
-#**************************************************************
+# ***************************************************************
+# * Name:      LMS7002_RFE.py
+# * Purpose:   Class implementing LMS7002 RFE functions
+# * Author:    Lime Microsystems ()
+# * Created:   2016-11-14
+# * Copyright: Lime Microsystems (limemicro.com)
+# * License:
+# **************************************************************
 
-from LMS7002_base import *
+from pyLMS7002Soapy.LMS7002_base import LMS7002_base
+
 
 class LMS7002_RFE(LMS7002_base):
-    __slots__=[]    # Used to generate error on typos
+    __slots__ = []  # Used to generate error on typos
+
     def __init__(self, chip, Channel):
         if Channel not in ['A', 'B']:
             raise ValueError("Parameter Channel must be 'A' or 'B'")
@@ -19,7 +21,7 @@ class LMS7002_RFE(LMS7002_base):
         self.prefix = "RFE_"
 
     # EN_DIR
-    @property 
+    @property
     def EN_DIR(self):
         """
         Get the value of EN_DIR
@@ -47,7 +49,7 @@ class LMS7002_RFE(LMS7002_base):
     #
 
     # CDC_I_RFE<3:0>
-    @property 
+    @property
     def CDC_I_RFE(self):
         """
         Get the value of CDC_I_RFE<3:0>
@@ -59,12 +61,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of CDC_I_RFE<3:0>
         """
-        if not(0 <= value <= 15):
+        if not (0 <= value <= 15):
             raise ValueError("Value must be [0,16]")
         self._writeReg('CFG0', 'CDC_I_RFE<3:0>', value)
-        
+
     # CDC_Q_RFE<3:0>
-    @property 
+    @property
     def CDC_Q_RFE(self):
         """
         Get the value of CDC_Q_RFE<3:0>
@@ -76,12 +78,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of CDC_Q_RFE<3:0>
         """
-        if not(0 <= value <= 15):
+        if not (0 <= value <= 15):
             raise ValueError("Value must be [0,16]")
         self._writeReg('CFG0', 'CDC_Q_RFE<3:0>', value)
 
     # PD_LNA_RFE
-    @property 
+    @property
     def PD_LNA_RFE(self):
         """
         Get the value of PD_LNA_RFE
@@ -95,15 +97,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG0', 'PD_LNA_RFE', val)
 
-
     # PD_RLOOPB_1_RFE
-    @property 
+    @property
     def PD_RLOOPB_1_RFE(self):
         """
         Get the value of PD_RLOOPB_1_RFE
@@ -117,14 +118,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG0', 'PD_RLOOPB_1_RFE', val)
 
     # PD_RLOOPB_2_RFE
-    @property 
+    @property
     def PD_RLOOPB_2_RFE(self):
         """
         Get the value of PD_RLOOPB_2_RFE
@@ -138,14 +139,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG0', 'PD_RLOOPB_2_RFE', val)
-        
+
     # PD_MXLOBUF_RFE
-    @property 
+    @property
     def PD_MXLOBUF_RFE(self):
         """
         Get the value of PD_MXLOBUF_RFE
@@ -159,14 +160,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG0', 'PD_MXLOBUF_RFE', val)
 
     # PD_QGEN_RFE
-    @property 
+    @property
     def PD_QGEN_RFE(self):
         """
         Get the value of PD_QGEN_RFE
@@ -180,14 +181,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG0', 'PD_QGEN_RFE', val)
 
     # PD_RSSI_RFE
-    @property 
+    @property
     def PD_RSSI_RFE(self):
         """
         Get the value of PD_RSSI_RFE
@@ -201,14 +202,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG0', 'PD_RSSI_RFE', val)
 
     # PD_TIA_RFE
-    @property 
+    @property
     def PD_TIA_RFE(self):
         """
         Get the value of PD_TIA_RFE
@@ -222,14 +223,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG0', 'PD_TIA_RFE', val)
 
     # EN_G_RFE
-    @property 
+    @property
     def EN_G_RFE(self):
         """
         Get the value of EN_G_RFE
@@ -243,7 +244,7 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='OFF':
+        if value == 0 or value == 'OFF':
             val = 0
         else:
             val = 1
@@ -254,7 +255,7 @@ class LMS7002_RFE(LMS7002_base):
     #
 
     # SEL_PATH_RFE<1:0>
-    @property 
+    @property
     def SEL_PATH_RFE(self):
         """
         Get the value of SEL_PATH_RFE<1:0>
@@ -268,18 +269,18 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 2, 3, 'NONE', 'LNAH', 'LNAL', 'LNAW']:
             raise ValueError("Value must be [0, 1, 2, 3, 'NONE', 'LNAH', 'LNAL', 'LNAW']")
-        if value==0 or value=='NONE':
+        if value == 0 or value == 'NONE':
             val = 0
-        elif value==1 or value=='LNAH':
+        elif value == 1 or value == 'LNAH':
             val = 1
-        elif value==2 or value=='LNAL':
+        elif value == 2 or value == 'LNAL':
             val = 2
         else:
             val = 3
         self._writeReg('CFG1', 'SEL_PATH_RFE<1:0>', val)
 
     # EN_DCOFF_RXFE_RFE
-    @property 
+    @property
     def EN_DCOFF_RXFE_RFE(self):
         """
         Get the value of EN_DCOFF_RXFE_RFE
@@ -293,14 +294,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='OFF':
+        if value == 0 or value == 'OFF':
             val = 0
         else:
             val = 1
         self._writeReg('CFG1', 'EN_DCOFF_RXFE_RFE', val)
 
     # EN_INSHSW_LB1_RFE
-    @property 
+    @property
     def EN_INSHSW_LB1_RFE(self):
         """
         Get the value of EN_INSHSW_LB1_RFE
@@ -314,14 +315,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='OFF':
+        if value == 0 or value == 'OFF':
             val = 0
         else:
             val = 1
         self._writeReg('CFG1', 'EN_INSHSW_LB1_RFE', val)
 
     # EN_INSHSW_LB2_RFE
-    @property 
+    @property
     def EN_INSHSW_LB2_RFE(self):
         """
         Get the value of EN_INSHSW_LB2_RFE
@@ -335,14 +336,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='OFF':
+        if value == 0 or value == 'OFF':
             val = 0
         else:
             val = 1
         self._writeReg('CFG1', 'EN_INSHSW_LB2_RFE', val)
 
     # EN_INSHSW_L_RFE
-    @property 
+    @property
     def EN_INSHSW_L_RFE(self):
         """
         Get the value of EN_INSHSW_L_RFE
@@ -356,14 +357,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='OFF':
+        if value == 0 or value == 'OFF':
             val = 0
         else:
             val = 1
         self._writeReg('CFG1', 'EN_INSHSW_L_RFE', val)
 
     # EN_INSHSW_W_RFE
-    @property 
+    @property
     def EN_INSHSW_W_RFE(self):
         """
         Get the value of EN_INSHSW_W_RFE
@@ -377,14 +378,14 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='OFF':
+        if value == 0 or value == 'OFF':
             val = 0
         else:
             val = 1
         self._writeReg('CFG1', 'EN_INSHSW_W_RFE', val)
 
     # EN_NEXTRX_RFE
-    @property 
+    @property
     def EN_NEXTRX_RFE(self):
         """
         Get the value of EN_NEXTRX_RFE
@@ -398,57 +399,56 @@ class LMS7002_RFE(LMS7002_base):
         """
         if value not in [0, 1, 'SISO', 'MIMO']:
             raise ValueError("Value must be [0,1,'SISO', 'MIMO']")
-        if value==0 or value=='SISO':
+        if value == 0 or value == 'SISO':
             val = 0
         else:
             val = 1
         self._writeReg('CFG1', 'EN_NEXTRX_RFE', val)
-        
 
     #
     # RFE_DCOFF (0x010E)
     #
-    
+
     # DCOFFI_RFE<6:0>
-    @property 
+    @property
     def DCOFFI_RFE(self):
         """
         Get the value of DCOFFI_RFE<6:0>
         """
-        return self.signMagnitudeToInt(self._readReg('DCOFF', 'DCOFFI_RFE<6:0>'),7)
+        return self.signMagnitudeToInt(self._readReg('DCOFF', 'DCOFFI_RFE<6:0>'), 7)
 
     @DCOFFI_RFE.setter
     def DCOFFI_RFE(self, value):
         """
         Set the value of DCOFFI_RFE<6:0>
         """
-        if not(-63 <= value <= 63):
+        if not (-63 <= value <= 63):
             raise ValueError("Value must be [-63..63]")
-        self._writeReg('DCOFF', 'DCOFFI_RFE<6:0>', self.intToSignMagnitude(value,7))
+        self._writeReg('DCOFF', 'DCOFFI_RFE<6:0>', self.intToSignMagnitude(value, 7))
 
     # DCOFFQ_RFE<6:0>
-    @property 
+    @property
     def DCOFFQ_RFE(self):
         """
         Get the value of DCOFFQ_RFE<6:0>
         """
-        return self.signMagnitudeToInt(self._readReg('DCOFF', 'DCOFFQ_RFE<6:0>'),7)
+        return self.signMagnitudeToInt(self._readReg('DCOFF', 'DCOFFQ_RFE<6:0>'), 7)
 
     @DCOFFQ_RFE.setter
     def DCOFFQ_RFE(self, value):
         """
         Set the value of DCOFFQ_RFE<6:0>
         """
-        if not(-63 <= value <= 63):
+        if not (-63 <= value <= 63):
             raise ValueError("Value must be [-63..63]")
-        self._writeReg('DCOFF', 'DCOFFQ_RFE<6:0>', self.intToSignMagnitude(value,7))
+        self._writeReg('DCOFF', 'DCOFFQ_RFE<6:0>', self.intToSignMagnitude(value, 7))
 
     #
     # RFE_ICT0 (0x010F)
     #
 
     # ICT_LOOPB_RFE<4:0>
-    @property 
+    @property
     def ICT_LOOPB_RFE(self):
         """
         Get the value of ICT_LOOPB_RFE<4:0>
@@ -460,12 +460,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of ICT_LOOPB_RFE<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT0', 'ICT_LOOPB_RFE<4:0>', value)
 
     # ICT_TIAMAIN_RFE<4:0>
-    @property 
+    @property
     def ICT_TIAMAIN_RFE(self):
         """
         Get the value of ICT_TIAMAIN_RFE<4:0>
@@ -477,12 +477,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of ICT_TIAMAIN_RFE<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT0', 'ICT_TIAMAIN_RFE<4:0>', value)
 
     # ICT_TIAOUT_RFE<4:0>
-    @property 
+    @property
     def ICT_TIAOUT_RFE(self):
         """
         Get the value of ICT_TIAOUT_RFE<4:0>
@@ -494,7 +494,7 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of ICT_TIAOUT_RFE<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT0', 'ICT_TIAOUT_RFE<4:0>', value)
 
@@ -503,7 +503,7 @@ class LMS7002_RFE(LMS7002_base):
     #
 
     # ICT_LNACMO_RFE<4:0>
-    @property 
+    @property
     def ICT_LNACMO_RFE(self):
         """
         Get the value of ICT_LNACMO_RFE<4:0>
@@ -515,12 +515,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of ICT_LNACMO_RFE<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT1', 'ICT_LNACMO_RFE<4:0>', value)
 
     # ICT_LNA_RFE<4:0>
-    @property 
+    @property
     def ICT_LNA_RFE(self):
         """
         Get the value of ICT_LNA_RFE<4:0>
@@ -532,12 +532,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of ICT_LNA_RFE<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT1', 'ICT_LNA_RFE<4:0>', value)
 
     # ICT_LODC_RFE<4:0>
-    @property 
+    @property
     def ICT_LODC_RFE(self):
         """
         Get the value of ICT_LODC_RFE<4:0>
@@ -549,7 +549,7 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of ICT_LODC_RFE<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT1', 'ICT_LODC_RFE<4:0>', value)
 
@@ -558,7 +558,7 @@ class LMS7002_RFE(LMS7002_base):
     #
 
     # CAP_RXMXO_RFE<4:0>
-    @property 
+    @property
     def CAP_RXMXO_RFE(self):
         """
         Get the value of CAP_RXMXO_RFE<4:0>
@@ -570,12 +570,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of CAP_RXMXO_RFE<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('CAP0', 'CAP_RXMXO_RFE<4:0>', value)
 
     # CGSIN_LNA_RFE<4:0>
-    @property 
+    @property
     def CGSIN_LNA_RFE(self):
         """
         Get the value of CGSIN_LNA_RFE<4:0>
@@ -587,7 +587,7 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of CGSIN_LNA_RFE<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('CAP0', 'CGSIN_LNA_RFE<4:0>', value)
 
@@ -596,7 +596,7 @@ class LMS7002_RFE(LMS7002_base):
     #
 
     # CCOMP_TIA_RFE<3:0>
-    @property 
+    @property
     def CCOMP_TIA_RFE(self):
         """
         Get the value of CCOMP_TIA_RFE<3:0>
@@ -608,12 +608,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of CCOMP_TIA_RFE<3:0>
         """
-        if not(0 <= value <= 15):
+        if not (0 <= value <= 15):
             raise ValueError("Value must be [0..15]")
         self._writeReg('CAP1', 'CCOMP_TIA_RFE<3:0>', value)
 
     # CFB_TIA_RFE<11:0>
-    @property 
+    @property
     def CFB_TIA_RFE(self):
         """
         Get the value of CFB_TIA_RFE<11:0>
@@ -625,7 +625,7 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of CFB_TIA_RFE<11:0>
         """
-        if not(0 <= value <= 4095):
+        if not (0 <= value <= 4095):
             raise ValueError("Value must be [0..4095]")
         self._writeReg('CAP1', 'CFB_TIA_RFE<11:0>', value)
 
@@ -634,7 +634,7 @@ class LMS7002_RFE(LMS7002_base):
     #
 
     # G_LNA_RFE<3:0>
-    @property 
+    @property
     def G_LNA_RFE(self):
         """
         Get the value of G_LNA_RFE<3:0>
@@ -646,12 +646,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of G_LNA_RFE<3:0>
         """
-        if not(1 <= value <= 15):
+        if not (1 <= value <= 15):
             raise ValueError("Value must be [1..15]")
         self._writeReg('GAIN', 'G_LNA_RFE<3:0>', value)
 
     # G_RXLOOPB_RFE<3:0>
-    @property 
+    @property
     def G_RXLOOPB_RFE(self):
         """
         Get the value of G_RXLOOPB_RFE<3:0>
@@ -663,12 +663,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of G_RXLOOPB_RFE<3:0>
         """
-        if not(0 <= value <= 15):
+        if not (0 <= value <= 15):
             raise ValueError("Value must be [0..15]")
         self._writeReg('GAIN', 'G_RXLOOPB_RFE<3:0>', value)
 
     # G_TIA_RFE<1:0>
-    @property 
+    @property
     def G_TIA_RFE(self):
         """
         Get the value of G_TIA_RFE<1:0>
@@ -680,7 +680,7 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of G_TIA_RFE<1:0>
         """
-        if not(1 <= value <= 3):
+        if not (1 <= value <= 3):
             raise ValueError("Value must be [1..3]")
         self._writeReg('GAIN', 'G_TIA_RFE<1:0>', value)
 
@@ -689,7 +689,7 @@ class LMS7002_RFE(LMS7002_base):
     #
 
     # RCOMP_TIA_RFE<3:0>
-    @property 
+    @property
     def RCOMP_TIA_RFE(self):
         """
         Get the value of RCOMP_TIA_RFE<3:0>
@@ -701,12 +701,12 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of RCOMP_TIA_RFE<3:0>
         """
-        if not(0 <= value <= 15):
+        if not (0 <= value <= 15):
             raise ValueError("Value must be [0..15]")
         self._writeReg('TIA', 'RCOMP_TIA_RFE<3:0>', value)
 
     # RFB_TIA_RFE<4:0>
-    @property 
+    @property
     def RFB_TIA_RFE(self):
         """
         Get the value of RFB_TIA_RFE<4:0>
@@ -718,7 +718,6 @@ class LMS7002_RFE(LMS7002_base):
         """
         Set the value of RFB_TIA_RFE<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('TIA', 'RFB_TIA_RFE<4:0>', value)
-

@@ -1,30 +1,30 @@
-#***************************************************************
-#* Name:      LMS7002_calibration.py
-#* Purpose:   Class implementing LMS7002 calibration functions
-#* Author:    Lime Microsystems ()
-#* Created:   2016-11-14
-#* Copyright: Lime Microsystems (limemicro.com)
-#* License:
-#**************************************************************
+# ***************************************************************
+# * Name:      LMS7002_calibration.py
+# * Purpose:   Class implementing LMS7002 calibration functions
+# * Author:    Lime Microsystems ()
+# * Created:   2016-11-14
+# * Copyright: Lime Microsystems (limemicro.com)
+# * License:
+# **************************************************************
 
-from LMS7002_base import *
+from pyLMS7002Soapy.LMS7002_base import LMS7002_base
+
 
 class LMS7002_calibration(LMS7002_base):
-    
+
     def __init__(self, chip):
         self.chip = chip
         self.channel = None
         self.prefix = ""
 
-
     #
     # Filter calibration
     #
-    
+
     #
     # DAC calibration
     #
-        
+
     #
     # RX DC offset and LO leakage
     #
@@ -40,12 +40,12 @@ class LMS7002_calibration(LMS7002_base):
         RxTSP = chip.RxTSP[channel]
         RFE = chip.RFE[channel]
         maxVal = RxTSP.RSSI
-        chip.log('\tStarting TIA offset calibration for channel '+channel+'. RSSI : '+str(maxVal), 1)
+        chip.log('\tStarting TIA offset calibration for channel ' + channel + '. RSSI : ' + str(maxVal), 1)
         ind = 0
         DCOFFQ_RFE = 0
         offsList = [32, 16, 8, 4, 2, 1]
         for offs in offsList:
-            for tmp in [ind-offs, ind, ind+offs]:
+            for tmp in [ind - offs, ind, ind + offs]:
                 RFE.DCOFFQ_RFE = tmp
                 val = RxTSP.RSSI
                 if val < maxVal:
@@ -58,16 +58,18 @@ class LMS7002_calibration(LMS7002_base):
         offsList = [32, 16, 8, 4, 2, 1]
         DCOFFI_RFE = 0
         for offs in offsList:
-            for tmp in [ind-offs, ind, ind+offs]:
+            for tmp in [ind - offs, ind, ind + offs]:
                 RFE.DCOFFI_RFE = tmp
                 val = RxTSP.RSSI
                 if val < maxVal:
                     ind = tmp
                     DCOFFI_RFE = tmp
                     maxVal = val
-        RFE.DCOFFI_RFE = DCOFFI_RFE             
-        chip.log('\tEnding TIA calibration. RSSI : ' +str(maxVal) + ', DCOFFI = ' + str(DCOFFI_RFE) + ', DCOFFQ = '+ str(DCOFFQ_RFE), 1)
-        return [DCOFFI_RFE, DCOFFQ_RFE]    
+        RFE.DCOFFI_RFE = DCOFFI_RFE
+        chip.log(
+            '\tEnding TIA calibration. RSSI : ' + str(maxVal) + ', DCOFFI = ' + str(DCOFFI_RFE) + ', DCOFFQ = ' + str(
+                DCOFFQ_RFE), 1)
+        return [DCOFFI_RFE, DCOFFQ_RFE]
 
     def calibrateTxOffset(self, channel):
         chip = self.chip
@@ -76,14 +78,14 @@ class LMS7002_calibration(LMS7002_base):
         DCOFFI = 0
         DCOFFQ = 0
         TxTSP.DCOFFI = 0
-        TxTSP.DCOFFQ = 0        
+        TxTSP.DCOFFQ = 0
         TxTSP.DC_BYP = 'BYP'
         maxVal = RxTSP.RSSI
-        chip.log('\tStarting TxTSP offset calibration for channel '+channel+'. RSSI : '+str(maxVal))
+        chip.log('\tStarting TxTSP offset calibration for channel ' + channel + '. RSSI : ' + str(maxVal))
         ind = 0
         offsList = [64, 32, 16, 8, 4, 2, 1]
         for offs in offsList:
-            for tmp in [ind-offs, ind, ind+offs]:
+            for tmp in [ind - offs, ind, ind + offs]:
                 TxTSP.DCCORRI = tmp
                 val = RxTSP.RSSI
                 if val < maxVal:
@@ -95,7 +97,7 @@ class LMS7002_calibration(LMS7002_base):
         ind = 0
         offsList = [64, 32, 16, 8, 4, 2, 1]
         for offs in offsList:
-            for tmp in [ind-offs, ind, ind+offs]:
+            for tmp in [ind - offs, ind, ind + offs]:
                 TxTSP.DCCORRQ = tmp
                 val = RxTSP.RSSI
                 if val < maxVal:
@@ -103,7 +105,7 @@ class LMS7002_calibration(LMS7002_base):
                     DCOFFQ = tmp
                     maxVal = val
         TxTSP.DCCORRQ = DCOFFQ
-        chip.log('\tEnding RSSI : ' +str(maxVal) + ', DCOFFI = ' + str(DCOFFI) + ', DCOFFQ = '+ str(DCOFFQ), 1)
+        chip.log('\tEnding RSSI : ' + str(maxVal) + ', DCOFFI = ' + str(DCOFFI) + ', DCOFFQ = ' + str(DCOFFQ), 1)
         return [DCOFFI, DCOFFQ]
 
     def calibrateTxIQ(self, channel):
@@ -116,27 +118,24 @@ class LMS7002_calibration(LMS7002_base):
         TxTSP.GCORRQ = GCORRQ
         TxTSP.GC_BYP = 'USE'
         maxVal = RxTSP.RSSI
-        chip.log('\tStarting TxTSP IQ calibration for channel '+channel+'. RSSI : '+str(maxVal))
-        ind = 0
-        #TxTSP.PH_BYP = 'BYP'
-        
-        for xx in range(0,2):
+        chip.log('\tStarting TxTSP IQ calibration for channel ' + channel + '. RSSI : ' + str(maxVal))
+        # TxTSP.PH_BYP = 'BYP'
+
+        for xx in range(0, 2):
             for tmp in range(1800, 2048):
                 TxTSP.GCORRQ = tmp
                 val = RxTSP.RSSI
                 if val < maxVal:
-                    print "Q ",val
-                    ind = tmp
+                    print("Q ", val)
                     GCORRQ = tmp
                     maxVal = val
-            TxTSP.GCORRQ = GCORRQ        
+            TxTSP.GCORRQ = GCORRQ
             maxVal = RxTSP.RSSI
             for tmp in range(1800, 2048):
                 TxTSP.GCORRI = tmp
                 val = RxTSP.RSSI
                 if val < maxVal:
-                    print "I ",val
-                    ind = tmp
+                    print("I ", val)
                     GCORRI = tmp
                     maxVal = val
             TxTSP.GCORRI = GCORRI
@@ -146,14 +145,13 @@ class LMS7002_calibration(LMS7002_base):
             TxTSP.IQCORR = tmp
             val = RxTSP.RSSI
             if val < maxVal:
-                print "PH ",val
-                ind = tmp
+                print("PH ", val)
                 IQCORR = tmp
                 maxVal = val
-        TxTSP.IQCORR = IQCORR
+                TxTSP.IQCORR = IQCORR
 
-        return 
-        
+        return
+
     def rxDCLO(self, channel, lna, lnaGain=15, pgaGain=31):
         """
         Calibrate the RX DC and LO offset for given channel and LNA.
@@ -161,47 +159,47 @@ class LMS7002_calibration(LMS7002_base):
         CGEN should be running at high frequency, e.g. 320 MHz.
         """
         chip = self.chip
-        
-        chip.log('Entering RX DC LO calibration, channel '+channel+' LNA '+lna, 1)
-        
+
+        chip.log('Entering RX DC LO calibration, channel ' + channel + ' LNA ' + lna, 1)
+
         RFE = chip.RFE[channel]
-        
+
         if channel == 'B':
             chip.RFE['A'].EN_NEXTRX_RFE = 1
-        
+
         # Disable feedback paths
         RFE.PD_RLOOPB_1_RFE = 1
         RFE.PD_RLOOPB_2_RFE = 1
         RFE.EN_INSHSW_LB2_RFE = 1
         RFE.EN_INSHSW_LB1_RFE = 1
-        
-        RFE.PD_LNA_RFE = 0      # enable LNAs
+
+        RFE.PD_LNA_RFE = 0  # enable LNAs
         RFE.SEL_PATH_RFE = lna  # select the desired LNA
-        RFE.PD_QGEN_RFE = 0     # enable LO
-        RFE.PD_MXLOBUF_RFE = 0 # enable mixers
-        
+        RFE.PD_QGEN_RFE = 0  # enable LO
+        RFE.PD_MXLOBUF_RFE = 0  # enable mixers
+
         if lna == 'LNAH':
             pass
         elif lna == 'LNAL':
             RFE.EN_INSHSW_L_RFE = 0
-            RFE.EN_INSHSW_W_RFE = 1      
+            RFE.EN_INSHSW_W_RFE = 1
         else:
             RFE.EN_INSHSW_L_RFE = 1
             RFE.EN_INSHSW_W_RFE = 0
         RFE.G_LNA_RFE = lnaGain
-       
-        RFE.PD_TIA_RFE = 0      # enable TIA
-        RFE.EN_DCOFF_RXFE_RFE = 1 # enable DC offset cancellation at TIA
+
+        RFE.PD_TIA_RFE = 0  # enable TIA
+        RFE.EN_DCOFF_RXFE_RFE = 1  # enable DC offset cancellation at TIA
         RFE.DCOFFI_RFE = 0
         RFE.DCOFFQ_RFE = 0
-        RFE.G_TIA_RFE = 3       # max TIA gain
-        
+        RFE.G_TIA_RFE = 3  # max TIA gain
+
         RBB = chip.RBB[channel]
-        RBB.PD_PGA_RBB = 0      # enable PGA
-        RBB.OSW_PGA_RBB = 'ADC' # route PGA to ADC
-        RBB.INPUT_CTL_PGA_RBB = 'LPFBYP' # bypass LPF
+        RBB.PD_PGA_RBB = 0  # enable PGA
+        RBB.OSW_PGA_RBB = 'ADC'  # route PGA to ADC
+        RBB.INPUT_CTL_PGA_RBB = 'LPFBYP'  # bypass LPF
         RBB.G_PGA_RBB = pgaGain
-        
+
         RxTSP = chip.RxTSP[channel]
         RxTSP.EN = 1
         RxTSP.DCCORR_AVG = 0
@@ -219,12 +217,11 @@ class LMS7002_calibration(LMS7002_base):
         # TODO: Check for ADC overload
 
         DCOFFI_RFE, DCOFFQ_RFE = self.calibrateTIAoffset(channel)
-        #RxTSP.DC_BYP = 'USE'
-        #maxVal = RxTSP.RSSI
-        #chip.log('\tEnabling RX DC corrector. Residual RSSI = '+str(maxVal),1)
-        
-        return [DCOFFI_RFE, DCOFFQ_RFE]
+        # RxTSP.DC_BYP = 'USE'
+        # maxVal = RxTSP.RSSI
+        # chip.log('\tEnabling RX DC corrector. Residual RSSI = '+str(maxVal),1)
 
+        return [DCOFFI_RFE, DCOFFQ_RFE]
 
     #
     # TX DC offset and LO leakage
@@ -238,9 +235,9 @@ class LMS7002_calibration(LMS7002_base):
         TX DC calibration depends on the TBB gain setting.
         """
         chip = self.chip
-        
-        chip.log('Entering TX DC LO calibration, channel '+channel, 1)
-        
+
+        chip.log('Entering TX DC LO calibration, channel ' + channel, 1)
+
         TxTSP = chip.TxTSP[channel]
         TxTSP.TSGMODE = 'DC'
         TxTSP.INSEL = 'TEST'
@@ -251,40 +248,40 @@ class LMS7002_calibration(LMS7002_base):
         TxTSP.GC_BYP = 'BYP'
         TxTSP.DC_BYP = 'BYP'
         TxTSP.PH_BYP = 'BYP'
-        I = 0 #0x7FFF
-        Q = 0 #0x8000
-        TxTSP.loadDCIQ(I, Q)        
-        
+        I = 0  # 0x7FFF
+        Q = 0  # 0x8000
+        TxTSP.loadDCIQ(I, Q)
+
         # Configure TRF
         TRF = chip.TRF[channel]
-        TRF.LOSS_MAIN_TXPAD_TRF = 0    
-        
+        TRF.LOSS_MAIN_TXPAD_TRF = 0
+
         TRF.PD_TLOBUF_TRF = 0
         TRF.PD_TXPAD_TRF = 0
         TRF.EN_LOOPB_TXPAD_TRF = 1
         TRF.L_LOOPB_TXPAD_TRF = 0
 
-        if band==1:
-            TRF.SEL_BAND1_TRF=1
-            TRF.SEL_BAND2_TRF=0            
+        if band == 1:
+            TRF.SEL_BAND1_TRF = 1
+            TRF.SEL_BAND2_TRF = 0
         else:
-            TRF.SEL_BAND1_TRF=0
-            TRF.SEL_BAND2_TRF=1            
-        
-        if channel=='B':
-            chip.TRF['A'].EN_NEXTTX_TRF = 1   
+            TRF.SEL_BAND1_TRF = 0
+            TRF.SEL_BAND2_TRF = 1
+
+        if channel == 'B':
+            chip.TRF['A'].EN_NEXTTX_TRF = 1
         else:
-            TRF.EN_NEXTTX_TRF = 0        
-        
+            TRF.EN_NEXTTX_TRF = 0
+
         RFE = chip.RFE[channel]
-        
+
         if channel == 'B':
             chip.RFE['A'].EN_NEXTRX_RFE = 1
         else:
             RFE.EN_NEXTRX_RFE = 0
-        
+
         # Enable feedback paths
-        if band==1:
+        if band == 1:
             # Band 1 goes to LNAW path
             RFE.PD_RLOOPB_1_RFE = 0
             RFE.EN_INSHSW_LB1_RFE = 0
@@ -296,32 +293,32 @@ class LMS7002_calibration(LMS7002_base):
             RFE.EN_INSHSW_LB1_RFE = 1
             RFE.PD_RLOOPB_2_RFE = 0
             RFE.EN_INSHSW_LB2_RFE = 0
-        
-        RFE.PD_LNA_RFE = 1      # disable LNAs
+
+        RFE.PD_LNA_RFE = 1  # disable LNAs
         RFE.EN_INSHSW_L_RFE = 0
         RFE.EN_INSHSW_W_RFE = 0
 
-        if band==1: # select the desired path
+        if band == 1:  # select the desired path
             RFE.SEL_PATH_RFE = 'LNAW'
         else:
             RFE.SEL_PATH_RFE = 'LNAL'
 
-        RFE.PD_QGEN_RFE = 0     # enable LO
+        RFE.PD_QGEN_RFE = 0  # enable LO
         RFE.PD_MXLOBUF_RFE = 0  # enable mixers
-               
-        RFE.PD_TIA_RFE = 0      # enable TIA
-        RFE.EN_DCOFF_RXFE_RFE = 1 # enable DC offset cancellation at TIA
-        RFE.G_TIA_RFE = 3       # max TIA gain
-       
+
+        RFE.PD_TIA_RFE = 0  # enable TIA
+        RFE.EN_DCOFF_RXFE_RFE = 1  # enable DC offset cancellation at TIA
+        RFE.G_TIA_RFE = 3  # max TIA gain
+
         RBB = chip.RBB[channel]
-        RBB.PD_PGA_RBB = 0      # enable PGA
+        RBB.PD_PGA_RBB = 0  # enable PGA
         RFE.DCOFFI_RFE = 0
         RFE.DCOFFQ_RFE = 0
-        RBB.OSW_PGA_RBB = 'ADC' # route PGA to ADC
-        RBB.G_PGA_RBB = 31      # max PGA gain
-        
+        RBB.OSW_PGA_RBB = 'ADC'  # route PGA to ADC
+        RBB.G_PGA_RBB = 31  # max PGA gain
+
         # LPF settings
-        RBB.INPUT_CTL_PGA_RBB = 'LPFL' # use LPFL
+        RBB.INPUT_CTL_PGA_RBB = 'LPFL'  # use LPFL
         RBB.R_CTL_LPF_RBB = 16
         RBB.RCC_CTL_LPFL_RBB = 0
         RBB.C_CTL_LPFL_RBB = 2047
@@ -329,10 +326,10 @@ class LMS7002_calibration(LMS7002_base):
         RBB.PD_LPFH_RBB = 1
         RBB.EN_LB_LPFL_RBB = 1
         RBB.EN_LB_LPFH_RBB = 0
-        
+
         # Without LPF
-        #RBB.INPUT_CTL_PGA_RBB = 'LPFBYP' # do not use LPFL
-        
+        # RBB.INPUT_CTL_PGA_RBB = 'LPFBYP' # do not use LPFL
+
         RxTSP = chip.RxTSP[channel]
         RxTSP.EN = 1
         RxTSP.DCCORR_AVG = 0
@@ -350,187 +347,185 @@ class LMS7002_calibration(LMS7002_base):
         RFE.G_RXLOOPB_RFE = 0  # min loopback gain
 
         self.calibrateTIAoffset(channel)
-        
+
         RxTSP.DC_BYP = 'USE'
         maxVal = RxTSP.RSSI
-        chip.log('\tEnabling RX DC corrector. Residual RSSI = '+str(maxVal),1)
-        
+        chip.log('\tEnabling RX DC corrector. Residual RSSI = ' + str(maxVal), 1)
+
         RFE.G_RXLOOPB_RFE = 15  # max loopback gain
 
         TxTSP.CMIX_BYP = 'USE'
         I = 0x7FFF
         Q = 0x8000
-        TxTSP.loadDCIQ(I, Q)  
+        TxTSP.loadDCIQ(I, Q)
 
-        dF = chip.CGEN.getADCFrequency()/32 # RX is tuned by dF, which is at 0.5 fs after decimation by 32
+        dF = chip.CGEN.getADCFrequency() / 32  # RX is tuned by dF, which is at 0.5 fs after decimation by 32
         # NCO
-        TXNCO = chip.NCO["TX"+channel]
+        TXNCO = chip.NCO["TX" + channel]
         TXNCO.MODE = 0
-        TXNCO.setNCOFrequency(0, dF*0.5)
+        TXNCO.setNCOFrequency(0, dF * 0.5)
         TXNCO.SEL = 0
-        
-        chip.log('\tEnabling looback and test signal',1)
+
+        chip.log('\tEnabling looback and test signal', 1)
         maxVal = RxTSP.RSSI
         chip.log('\tRSSi = ' + str(maxVal), 1)
-        
-        while maxVal>85e3:
+
+        while maxVal > 85e3:
             RFE.G_RXLOOPB_RFE -= 1  # reduce loopback gain
-            chip.log('\tReducing loopback gain to '+ str(RFE.G_RXLOOPB_RFE), 1)
-            maxVal = RxTSP.RSSI        
+            chip.log('\tReducing loopback gain to ' + str(RFE.G_RXLOOPB_RFE), 1)
+            maxVal = RxTSP.RSSI
 
         self.calibrateTxIQ(channel)
         return
-        TxDCOFFI, TxDCOFFQ = self.calibrateTxOffset(channel)
+        # TxDCOFFI, TxDCOFFQ = self.calibrateTxOffset(channel)
 
+    #    #
+    #    # TX DC offset and LO leakage
+    #    #
 
-#    #
-#    # TX DC offset and LO leakage
-#    #
+    #    def txDCLO(self, channel, band, DCOFFI_RFE=0, DCOFFQ_RFE=0):
+    #        """
+    #        Calibrate the TX DC and LO offset for given channel (A, B) and band (1 or 2).
+    #        SXR and SXT should be tuned to target frequency, with SXT>SXR by a few MHz.
+    #        CGEN should be running, e.g. 320 MHz.
+    #        TX DC calibration depends on the TBB gain setting.
+    #        """
+    #        chip = self.chip
+    #
+    #        chip.log('Entering TX DC LO calibration, channel '+channel+' DCI = '+str(DCOFFI_RFE)+', DCQ = '+str(DCOFFQ_RFE), 1)
+    #
+    #        TxTSP = chip.TxTSP[channel]
+    #        TxTSP.TSGMODE = 'DC'
+    #        TxTSP.INSEL = 'TEST'
+    #        TxTSP.CMIX_BYP = 'BYP'
+    #        TxTSP.GFIR1_BYP = 'BYP'
+    #        TxTSP.GFIR2_BYP = 'BYP'
+    #        TxTSP.GFIR3_BYP = 'BYP'
+    #        I = 0 #0x7FFF
+    #        Q = 0 #0x8000
+    #        TxTSP.loadDCIQ(I, Q)
+    #
+    #        # Configure TRF
+    #        TRF = chip.TRF[channel]
+    #        TRF.LOSS_MAIN_TXPAD_TRF = 0
+    #
+    #        TRF.PD_TLOBUF_TRF = 0
+    #        TRF.PD_TXPAD_TRF = 0
+    #        TRF.EN_LOOPB_TXPAD_TRF = 1
+    #        TRF.L_LOOPB_TXPAD_TRF = 3
 
-#    def txDCLO(self, channel, band, DCOFFI_RFE=0, DCOFFQ_RFE=0):
-#        """
-#        Calibrate the TX DC and LO offset for given channel (A, B) and band (1 or 2).
-#        SXR and SXT should be tuned to target frequency, with SXT>SXR by a few MHz.
-#        CGEN should be running, e.g. 320 MHz.
-#        TX DC calibration depends on the TBB gain setting.
-#        """
-#        chip = self.chip
-#        
-#        chip.log('Entering TX DC LO calibration, channel '+channel+' DCI = '+str(DCOFFI_RFE)+', DCQ = '+str(DCOFFQ_RFE), 1)
-#        
-#        TxTSP = chip.TxTSP[channel]
-#        TxTSP.TSGMODE = 'DC'
-#        TxTSP.INSEL = 'TEST'
-#        TxTSP.CMIX_BYP = 'BYP'
-#        TxTSP.GFIR1_BYP = 'BYP'
-#        TxTSP.GFIR2_BYP = 'BYP'
-#        TxTSP.GFIR3_BYP = 'BYP'
-#        I = 0 #0x7FFF
-#        Q = 0 #0x8000
-#        TxTSP.loadDCIQ(I, Q)        
-#        
-#        # Configure TRF
-#        TRF = chip.TRF[channel]
-#        TRF.LOSS_MAIN_TXPAD_TRF = 0    
-#        
-#        TRF.PD_TLOBUF_TRF = 0
-#        TRF.PD_TXPAD_TRF = 0
-#        TRF.EN_LOOPB_TXPAD_TRF = 1
-#        TRF.L_LOOPB_TXPAD_TRF = 3
+    #        if band==1:
+    #            TRF.SEL_BAND1_TRF=1
+    #            TRF.SEL_BAND2_TRF=0
+    #        else:
+    #            TRF.SEL_BAND1_TRF=0
+    #            TRF.SEL_BAND2_TRF=1
+    #
+    #        if channel=='B':
+    #            chip.TRF['A'].EN_NEXTTX_TRF = 1
+    #        else:
+    #            TRF.EN_NEXTTX_TRF = 0
+    #
+    #        RFE = chip.RFE[channel]
+    #
+    #        if channel == 'B':
+    #            chip.RFE['A'].EN_NEXTRX_RFE = 1
+    #        else:
+    #            RFE.EN_NEXTRX_RFE = 0
+    #
+    #        # Enable feedback paths
+    #        if band==1:
+    #            # Band 1 goes to LNAW path
+    #            RFE.PD_RLOOPB_1_RFE = 0
+    #            RFE.EN_INSHSW_LB1_RFE = 0
+    #            RFE.PD_RLOOPB_2_RFE = 1
+    #            RFE.EN_INSHSW_LB2_RFE = 1
+    #        else:
+    #            # Band 2 goes to LNAL path
+    #            RFE.PD_RLOOPB_1_RFE = 1
+    #            RFE.EN_INSHSW_LB1_RFE = 1
+    #            RFE.PD_RLOOPB_2_RFE = 0
+    #            RFE.EN_INSHSW_LB2_RFE = 0
+    #
+    #        RFE.PD_LNA_RFE = 1      # disable LNAs
+    #        RFE.EN_INSHSW_L_RFE = 0
+    #        RFE.EN_INSHSW_W_RFE = 0
 
-#        if band==1:
-#            TRF.SEL_BAND1_TRF=1
-#            TRF.SEL_BAND2_TRF=0            
-#        else:
-#            TRF.SEL_BAND1_TRF=0
-#            TRF.SEL_BAND2_TRF=1            
-#        
-#        if channel=='B':
-#            chip.TRF['A'].EN_NEXTTX_TRF = 1   
-#        else:
-#            TRF.EN_NEXTTX_TRF = 0        
-#        
-#        RFE = chip.RFE[channel]
-#        
-#        if channel == 'B':
-#            chip.RFE['A'].EN_NEXTRX_RFE = 1
-#        else:
-#            RFE.EN_NEXTRX_RFE = 0
-#        
-#        # Enable feedback paths
-#        if band==1:
-#            # Band 1 goes to LNAW path
-#            RFE.PD_RLOOPB_1_RFE = 0
-#            RFE.EN_INSHSW_LB1_RFE = 0
-#            RFE.PD_RLOOPB_2_RFE = 1
-#            RFE.EN_INSHSW_LB2_RFE = 1
-#        else:
-#            # Band 2 goes to LNAL path
-#            RFE.PD_RLOOPB_1_RFE = 1
-#            RFE.EN_INSHSW_LB1_RFE = 1
-#            RFE.PD_RLOOPB_2_RFE = 0
-#            RFE.EN_INSHSW_LB2_RFE = 0
-#        
-#        RFE.PD_LNA_RFE = 1      # disable LNAs
-#        RFE.EN_INSHSW_L_RFE = 0
-#        RFE.EN_INSHSW_W_RFE = 0
+    #        if band==1: # select the desired path
+    #            RFE.SEL_PATH_RFE = 'LNAW'
+    #        else:
+    #            RFE.SEL_PATH_RFE = 'LNAL'
 
-#        if band==1: # select the desired path
-#            RFE.SEL_PATH_RFE = 'LNAW'
-#        else:
-#            RFE.SEL_PATH_RFE = 'LNAL'
+    #        RFE.PD_QGEN_RFE = 0     # enable LO
+    #        RFE.PD_MXLOBUF_RFE = 0  # enable mixers
+    #
+    #        RFE.PD_TIA_RFE = 0      # enable TIA
+    #        RFE.EN_DCOFF_RXFE_RFE = 1 # enable DC offset cancellation at TIA
+    #        RFE.G_TIA_RFE = 3       # max TIA gain
+    #
+    #        RBB = chip.RBB[channel]
+    #        RBB.PD_PGA_RBB = 0      # enable PGA
+    #        RFE.DCOFFI_RFE = DCOFFI_RFE
+    #        RFE.DCOFFQ_RFE = DCOFFQ_RFE
+    #        RBB.OSW_PGA_RBB = 'ADC' # route PGA to ADC
+    #        RBB.INPUT_CTL_PGA_RBB = 'LPFBYP' # bypass LPF
+    #        RBB.G_PGA_RBB = 31      # max PGA gain
+    #
+    #        RxTSP = chip.RxTSP[channel]
+    #        RxTSP.EN = 1
+    #        RxTSP.DCCORR_AVG = 0
+    #        RxTSP.GC_BYP = 'BYP'
+    #        RxTSP.PH_BYP = 'BYP'
+    #        RxTSP.DC_BYP = 'BYP'
+    #        RxTSP.CMIX_BYP = 'BYP'
+    #        RxTSP.HBD_OVR = '8'
+    #        RxTSP.GFIR1_BYP = 'BYP'
+    #        RxTSP.GFIR2_BYP = 'BYP'
+    #        RxTSP.GFIR3_BYP = 'BYP'
+    #        RxTSP.CAPSEL = 'RSSI'
+    #        RxTSP.AGC_MODE = 'RSSI'
 
-#        RFE.PD_QGEN_RFE = 0     # enable LO
-#        RFE.PD_MXLOBUF_RFE = 0  # enable mixers
-#               
-#        RFE.PD_TIA_RFE = 0      # enable TIA
-#        RFE.EN_DCOFF_RXFE_RFE = 1 # enable DC offset cancellation at TIA
-#        RFE.G_TIA_RFE = 3       # max TIA gain
-#       
-#        RBB = chip.RBB[channel]
-#        RBB.PD_PGA_RBB = 0      # enable PGA
-#        RFE.DCOFFI_RFE = DCOFFI_RFE
-#        RFE.DCOFFQ_RFE = DCOFFQ_RFE
-#        RBB.OSW_PGA_RBB = 'ADC' # route PGA to ADC
-#        RBB.INPUT_CTL_PGA_RBB = 'LPFBYP' # bypass LPF
-#        RBB.G_PGA_RBB = 31      # max PGA gain
-#        
-#        RxTSP = chip.RxTSP[channel]
-#        RxTSP.EN = 1
-#        RxTSP.DCCORR_AVG = 0
-#        RxTSP.GC_BYP = 'BYP'
-#        RxTSP.PH_BYP = 'BYP'
-#        RxTSP.DC_BYP = 'BYP'
-#        RxTSP.CMIX_BYP = 'BYP'
-#        RxTSP.HBD_OVR = '8'
-#        RxTSP.GFIR1_BYP = 'BYP'
-#        RxTSP.GFIR2_BYP = 'BYP'
-#        RxTSP.GFIR3_BYP = 'BYP'
-#        RxTSP.CAPSEL = 'RSSI'
-#        RxTSP.AGC_MODE = 'RSSI'
+    #
+    #        RFE.G_RXLOOPB_RFE = 15  # max loopback gain
+    #
+    #        maxVal = RxTSP.RSSI
+    #        while maxVal>85e3:
+    #            RFE.G_RXLOOPB_RFE -= 1  # reduce loopback gain
+    #            maxVal = RxTSP.RSSI
 
-#        
-#        RFE.G_RXLOOPB_RFE = 15  # max loopback gain
-#            
-#        maxVal = RxTSP.RSSI
-#        while maxVal>85e3:
-#            RFE.G_RXLOOPB_RFE -= 1  # reduce loopback gain
-#            maxVal = RxTSP.RSSI        
+    #        chip.log('\tStarting RSSI : '+str(maxVal))
+    #
+    #        DCOFFI = 0
+    #        DCOFFQ = 0
+    #
+    #        maxVal = RxTSP.RSSI
+    #
+    #        ind = 0
+    #        offsList = [64, 32, 16, 8, 4, 2, 1]
+    #        for offs in offsList:
+    #            for tmp in [ind-offs, ind, ind+offs]:
+    #                TxTSP.DCCORRI = tmp
+    #                val = RxTSP.RSSI
+    #                if val < maxVal:
+    #                    ind = tmp
+    #                    DCOFFI = tmp
+    #                    maxVal = val
+    #        TxTSP.DCCORRI = DCOFFI
 
-#        chip.log('\tStarting RSSI : '+str(maxVal))    
-#        
-#        DCOFFI = 0
-#        DCOFFQ = 0
-#        
-#        maxVal = RxTSP.RSSI
-#        
-#        ind = 0
-#        offsList = [64, 32, 16, 8, 4, 2, 1]
-#        for offs in offsList:
-#            for tmp in [ind-offs, ind, ind+offs]:
-#                TxTSP.DCCORRI = tmp
-#                val = RxTSP.RSSI
-#                if val < maxVal:
-#                    ind = tmp
-#                    DCOFFI = tmp
-#                    maxVal = val
-#        TxTSP.DCCORRI = DCOFFI
+    #        ind = 0
+    #        offsList = [64, 32, 16, 8, 4, 2, 1]
+    #        for offs in offsList:
+    #            for tmp in [ind-offs, ind, ind+offs]:
+    #                TxTSP.DCCORRQ = tmp
+    #                val = RxTSP.RSSI
+    #                if val < maxVal:
+    #                    ind = tmp
+    #                    DCOFFQ = tmp
+    #                    maxVal = val
+    #        TxTSP.DCCORRQ = DCOFFQ
+    #        chip.log('\tEnding RSSI : ' +str(maxVal) + ', DCOFFI = ' + str(DCOFFI) + ', DCOFFQ = '+ str(DCOFFQ), 1)
+    #        return [DCOFFI, DCOFFQ]
 
-#        ind = 0
-#        offsList = [64, 32, 16, 8, 4, 2, 1]
-#        for offs in offsList:
-#            for tmp in [ind-offs, ind, ind+offs]:
-#                TxTSP.DCCORRQ = tmp
-#                val = RxTSP.RSSI
-#                if val < maxVal:
-#                    ind = tmp
-#                    DCOFFQ = tmp
-#                    maxVal = val
-#        TxTSP.DCCORRQ = DCOFFQ
-#        chip.log('\tEnding RSSI : ' +str(maxVal) + ', DCOFFI = ' + str(DCOFFI) + ', DCOFFQ = '+ str(DCOFFQ), 1)
-#        return [DCOFFI, DCOFFQ]
-
-        
     #
     # RX filter response
     #
@@ -548,9 +543,9 @@ class LMS7002_calibration(LMS7002_base):
         RBB.C_CTL_LPFL_RBB = 2047
         """
         chip = self.chip
-        band = 1
-        chip.log('Entering RX filter response, channel '+channel+' DCI = '+str(DCOFFI_RFE)+', DCQ = '+str(DCOFFQ_RFE), 1)
-        
+        chip.log('Entering RX filter response, channel ' + channel + ' DCI = ' + str(DCOFFI_RFE) + ', DCQ = ' + str(
+            DCOFFQ_RFE), 1)
+
         TxTSP = chip.TxTSP[channel]
         TxTSP.TSGMODE = 'DC'
         TxTSP.INSEL = 'TEST'
@@ -560,62 +555,61 @@ class LMS7002_calibration(LMS7002_base):
         TxTSP.GFIR3_BYP = 'BYP'
         I = 0
         Q = 0
-        TxTSP.loadDCIQ(I, Q)        
-        
+        TxTSP.loadDCIQ(I, Q)
+
         # Configure TRF
         TRF = chip.TRF[channel]
-        TRF.LOSS_MAIN_TXPAD_TRF = 0    
-        
+        TRF.LOSS_MAIN_TXPAD_TRF = 0
+
         TRF.PD_TLOBUF_TRF = 0
         TRF.PD_TXPAD_TRF = 0
         TRF.EN_LOOPB_TXPAD_TRF = 0
         TRF.L_LOOPB_TXPAD_TRF = 3
-        TRF.EN_NEXTTX_TRF = 0  
+        TRF.EN_NEXTTX_TRF = 0
 
         TBB = chip.TBB[channel]
-        TBB.CG_IAMP_TBB=31
+        TBB.CG_IAMP_TBB = 31
         TBB.EN_G_TBB = 1
-        
+
         TBB.PD_LPFH_TBB = 0
-        #TBB.PD_LPFH_TBB = 1
+        # TBB.PD_LPFH_TBB = 1
         TBB.PD_LPFLAD_TBB = 1
         TBB.PD_LPFS5_TBB = 1
         TBB.LOOPB_TBB = 3
-        #TBB.LOOPB_TBB = 1
-        
-        
+        # TBB.LOOPB_TBB = 1
+
         # NCO
-        TXNCO = chip.NCO["TX"+channel]
+        TXNCO = chip.NCO["TX" + channel]
         TXNCO.MODE = 0
         TXNCO.setNCOFrequency(0, 1e3)
         TXNCO.SEL = 0
-        
+
         RFE = chip.RFE[channel]
         RFE.EN_NEXTRX_RFE = 0
-        
+
         # Band 1 goes to LNAW path
         RFE.PD_RLOOPB_1_RFE = 1
         RFE.EN_INSHSW_LB1_RFE = 1
         RFE.PD_RLOOPB_2_RFE = 1
         RFE.EN_INSHSW_LB2_RFE = 1
 
-        RFE.PD_LNA_RFE = 1      # disable LNAs
+        RFE.PD_LNA_RFE = 1  # disable LNAs
         RFE.EN_INSHSW_L_RFE = 0
         RFE.EN_INSHSW_W_RFE = 0
 
-        RFE.PD_QGEN_RFE = 1     # disable LO
+        RFE.PD_QGEN_RFE = 1  # disable LO
         RFE.PD_MXLOBUF_RFE = 1  # disable mixers
-               
-        RFE.PD_TIA_RFE = 1      # disable TIA
-        RFE.EN_DCOFF_RXFE_RFE = 0 # disable DC offset cancellation at TIA
-       
+
+        RFE.PD_TIA_RFE = 1  # disable TIA
+        RFE.EN_DCOFF_RXFE_RFE = 0  # disable DC offset cancellation at TIA
+
         RBB = chip.RBB[channel]
-        RBB.PD_PGA_RBB = 0      # enable PGA
-        RBB.OSW_PGA_RBB = 'ADC' # route PGA to ADC
-        RBB.INPUT_CTL_PGA_RBB = filterName # select filter path
-        RBB.G_PGA_RBB = 31      # max PGA gain
-        
-        if filterName=='LPFL':
+        RBB.PD_PGA_RBB = 0  # enable PGA
+        RBB.OSW_PGA_RBB = 'ADC'  # route PGA to ADC
+        RBB.INPUT_CTL_PGA_RBB = filterName  # select filter path
+        RBB.G_PGA_RBB = 31  # max PGA gain
+
+        if filterName == 'LPFL':
             RBB.PD_LPFL_RBB = 0
             RBB.PD_LPFH_RBB = 1
             RBB.EN_LB_LPFL_RBB = 1
@@ -624,9 +618,8 @@ class LMS7002_calibration(LMS7002_base):
             RBB.PD_LPFL_RBB = 1
             RBB.PD_LPFH_RBB = 0
             RBB.EN_LB_LPFL_RBB = 0
-            RBB.EN_LB_LPFH_RBB = 1                       
+            RBB.EN_LB_LPFH_RBB = 1
 
- 
         RxTSP = chip.RxTSP[channel]
         RxTSP.EN = 1
         RxTSP.DCCORR_AVG = 0
@@ -642,41 +635,41 @@ class LMS7002_calibration(LMS7002_base):
         RxTSP.AGC_MODE = 'RSSI'
 
         TBB.LOOPB_TBB = 0
-        #print RxTSP.RSSI
+        # print RxTSP.RSSI
 
         TBB.LOOPB_TBB = 3
-        #TBB.LOOPB_TBB = 1
+        # TBB.LOOPB_TBB = 1
         I = 0x7FFF
         Q = 0x8000
-        TxTSP.loadDCIQ(I, Q)  
-        
-        maxVal = RxTSP.RSSI
-        while maxVal>85e3:
-            chip.log("\tReducing PGA gain to "+str(RBB.G_PGA_RBB), 1) 
-            RBB.G_PGA_RBB -= 1  # reduce loopback gain
-            maxVal = RxTSP.RSSI        
+        TxTSP.loadDCIQ(I, Q)
 
-        if freqPoints==None:
+        maxVal = RxTSP.RSSI
+        while maxVal > 85e3:
+            chip.log("\tReducing PGA gain to " + str(RBB.G_PGA_RBB), 1)
+            RBB.G_PGA_RBB -= 1  # reduce loopback gain
+            maxVal = RxTSP.RSSI
+
+        if freqPoints is None:
             freqs = []
             for decade in range(4, 8):
-                for point in [1,2,3,4,5,6,7,8,9]:
-                    freqs.append(point * 10**decade)
+                for point in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+                    freqs.append(point * 10 ** decade)
         else:
             freqs = freqPoints
 
         mag = []
         for freq in freqs:
             TXNCO.setNCOFrequency(0, freq)
-            mag.append( RxTSP.RSSI )
-            
+            mag.append(RxTSP.RSSI)
+
         return [freqs, mag]
-        
-        
+
     #
     # MCU commands
     #
 
-    def _getCommand(self, cmd):
+    @staticmethod
+    def _getCommand(cmd):
         if cmd == 'IDLE':
             return 0
         elif cmd == 'CALIBRATE_TX':
@@ -687,8 +680,9 @@ class LMS7002_calibration(LMS7002_base):
             return 255
         else:
             raise ValueError("Unknown command")
-            
-    def _getStatus(self, stat):
+
+    @staticmethod
+    def _getStatus(stat):
         if stat == 'MCU_IDLE':
             return 0x80
         elif stat == 'MCU_WORKING':
@@ -697,29 +691,29 @@ class LMS7002_calibration(LMS7002_base):
             return 1
         else:
             raise ValueError("Unknown command")
-    
+
     #
     # IQ calibration by on-chip MCU
     #
-    
+
     def mcuLoadIQcalibration(self):
         """
         Load IQ calibration program to MCU
-        """        
+        """
         chip = self.chip
         immMode = self.chip.SPIImmediate
         chip.SPIImmediate = True
-        
+
         mspi = chip.mSPI
         mspi.reset()
-        mspi.loadHex( self.getIQcalibrationHex(), mode='SRAM', isString=True)
+        mspi.loadHex(self.getIQcalibrationHex(), mode='SRAM', isString=True)
 
         # Check if MCU is programmed
-        if mspi.PROGRAMMED==0:
+        if mspi.PROGRAMMED == 0:
             self.chip.SPIImmediate = immMode
             chip.log("MCU programming failed", 1)
             return False
-            
+
         # Check program ID
         mspi.P0 = self._getCommand('IDLE')
         mspi.P0 = self._getCommand('PROGRAM_ID')
@@ -727,10 +721,10 @@ class LMS7002_calibration(LMS7002_base):
             self.chip.SPIImmediate = immMode
             chip.log("Wrong MCU program ID", 1)
             return False
-        mspi.P0 = self._getCommand('IDLE')            
-        self.chip.SPIImmediate = immMode            
+        mspi.P0 = self._getCommand('IDLE')
+        self.chip.SPIImmediate = immMode
         return True
-    
+
     def mcuCalibrateTx(self):
         """
         Use the on-chip MCU to calibrate TX path.
@@ -739,19 +733,19 @@ class LMS7002_calibration(LMS7002_base):
         chip = self.chip
         immMode = self.chip.SPIImmediate
         chip.SPIImmediate = True
-        
+
         mspi = chip.mSPI
         spiSW = mspi.SPISW_CTRL
         mspi.SPISW_CTRL = 'MCU'
 
         # Check if MCU is programmed
-        if mspi.PROGRAMMED==0:
+        if mspi.PROGRAMMED == 0:
             self.chip.SPIImmediate = immMode
             mspi.reset()
             chip.log("MCU not programmed", 1)
             mspi.SPISW_CTRL = spiSW
             return False
-            
+
         # Check program ID
         mspi.P0 = self._getCommand('IDLE')
         mspi.P0 = self._getCommand('PROGRAM_ID')
@@ -763,9 +757,9 @@ class LMS7002_calibration(LMS7002_base):
 
         mspi.P0 = self._getCommand('IDLE')
         mspi.P0 = self._getCommand('CALIBRATE_TX')
-        while mspi.P1==self._getStatus('MCU_WORKING'):
+        while mspi.P1 == self._getStatus('MCU_WORKING'):
             pass
-        
+
         if mspi.P1 != self._getStatus('MCU_IDLE'):
             self.chip.SPIImmediate = immMode
             chip.log("Calibration failed", 1)
@@ -793,13 +787,13 @@ class LMS7002_calibration(LMS7002_base):
         mspi.SPISW_CTRL = 'MCU'
 
         # Check if MCU is programmed
-        if mspi.PROGRAMMED==0:
+        if mspi.PROGRAMMED == 0:
             self.chip.SPIImmediate = immMode
             mspi.reset()
             chip.log("MCU not programmed", 1)
             mspi.SPISW_CTRL = spiSW
             return False
-            
+
         # Check program ID
         mspi.P0 = self._getCommand('IDLE')
         mspi.P0 = self._getCommand('PROGRAM_ID')
@@ -811,9 +805,9 @@ class LMS7002_calibration(LMS7002_base):
 
         mspi.P0 = self._getCommand('IDLE')
         mspi.P0 = self._getCommand('CALIBRATE_RX')
-        while mspi.P1==self._getStatus('MCU_WORKING'):
+        while mspi.P1 == self._getStatus('MCU_WORKING'):
             pass
-        
+
         if mspi.P1 != self._getStatus('MCU_IDLE'):
             self.chip.SPIImmediate = immMode
             chip.log("Calibration failed", 1)
@@ -824,14 +818,12 @@ class LMS7002_calibration(LMS7002_base):
         self.chip.SPIImmediate = immMode
         return True
 
-    
-
-        
     #
     # MCU hex files
     #
-    
-    def getIQcalibrationHex(self):
+
+    @staticmethod
+    def getIQcalibrationHex():
         return """:1019D400040841F5C28F041140A00000040C40A08B
                 :0519E4000000011014D9
                 :0619A400C3E53D953EFF86
@@ -1276,5 +1268,3 @@ class LMS7002_calibration(LMS7002_base):
                 :10161E00F0A3C8C582C8CAC583CADFE9DEE780BEAB
                 :0119E90000FD
                 :00000001FF"""
-                
-                
