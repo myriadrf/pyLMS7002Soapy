@@ -20,12 +20,16 @@ for high level functions, such as reading samples.
 
 The pyLMS7002Soapy package is installed in a usual way:
 
+  ```
   python3 setup.py install
+  ```
 
 Module installation can be verified from Python:
 
+  ```
   python3
   >>> from pyLMS7002Soapy import *
+  ```
 
 If there is no error, the module is correctly installed.
 
