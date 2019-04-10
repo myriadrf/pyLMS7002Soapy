@@ -1,16 +1,18 @@
-#***************************************************************
-#* Name:      LMS7002_TBB.py
-#* Purpose:   Class implementing LMS7002 TBB functions
-#* Author:    Lime Microsystems ()
-#* Created:   2016-11-14
-#* Copyright: Lime Microsystems (limemicro.com)
-#* License:
-#**************************************************************
+# ***************************************************************
+# * Name:      LMS7002_TBB.py
+# * Purpose:   Class implementing LMS7002 TBB functions
+# * Author:    Lime Microsystems ()
+# * Created:   2016-11-14
+# * Copyright: Lime Microsystems (limemicro.com)
+# * License:
+# **************************************************************
 
-from LMS7002_base import *
+from pyLMS7002Soapy.LMS7002_base import LMS7002_base
+
 
 class LMS7002_TBB(LMS7002_base):
-    __slots__ = []    # Used to generate error on typos
+    __slots__ = []  # Used to generate error on typos
+
     def __init__(self, chip, Channel):
         if Channel not in ['A', 'B']:
             raise ValueError("Parameter Channel must be 'A' or 'B'")
@@ -19,7 +21,7 @@ class LMS7002_TBB(LMS7002_base):
         self.prefix = "TBB_"
 
     # EN_DIR
-    @property 
+    @property
     def EN_DIR(self):
         """
         Get the value of EN_DIR
@@ -41,13 +43,13 @@ class LMS7002_TBB(LMS7002_base):
         self.prefix = ""
         self._writeReg('TRX_EN_DIR', 'EN_DIR_TBB', value)
         self.prefix = prefix
-        
+
     #
     # TBB_CFG (0x0105)
     #
 
     # STATPULSE_TBB
-    @property 
+    @property
     def STATPULSE_TBB(self):
         """
         Get the value of STATPULSE_TBB
@@ -64,7 +66,7 @@ class LMS7002_TBB(LMS7002_base):
         self._writeReg('CFG', 'STATPULSE_TBB', value)
 
     # LOOPB_TBB<2:0>
-    @property 
+    @property
     def LOOPB_TBB(self):
         """
         Get the value of LOOPB_TBB<2:0>
@@ -76,12 +78,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of LOOPB_TBB<2:0>
         """
-        if not(0 <= value <= 7):
+        if not (0 <= value <= 7):
             raise ValueError("Value must be [0..7]")
         self._writeReg('CFG', 'LOOPB_TBB<2:0>', value)
 
     # PD_LPFH_TBB
-    @property 
+    @property
     def PD_LPFH_TBB(self):
         """
         Get the value of PD_LPFH_TBB
@@ -95,14 +97,14 @@ class LMS7002_TBB(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG', 'PD_LPFH_TBB', val)
 
     # PD_LPFIAMP_TBB
-    @property 
+    @property
     def PD_LPFIAMP_TBB(self):
         """
         Get the value of PD_LPFIAMP_TBB
@@ -116,14 +118,14 @@ class LMS7002_TBB(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG', 'PD_LPFIAMP_TBB', val)
 
     # PD_LPFLAD_TBB
-    @property 
+    @property
     def PD_LPFLAD_TBB(self):
         """
         Get the value of PD_LPFLAD_TBB
@@ -137,14 +139,14 @@ class LMS7002_TBB(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG', 'PD_LPFLAD_TBB', val)
 
     # PD_LPFS5_TBB
-    @property 
+    @property
     def PD_LPFS5_TBB(self):
         """
         Get the value of PD_LPFS5_TBB
@@ -158,14 +160,14 @@ class LMS7002_TBB(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='ON':
+        if value == 0 or value == 'ON':
             val = 0
         else:
             val = 1
         self._writeReg('CFG', 'PD_LPFS5_TBB', val)
 
     # EN_G_TBB
-    @property 
+    @property
     def EN_G_TBB(self):
         """
         Get the value of EN_G_TBB
@@ -179,18 +181,18 @@ class LMS7002_TBB(LMS7002_base):
         """
         if value not in [0, 1, 'ON', 'OFF']:
             raise ValueError("Value must be [0,1,'ON', 'OFF']")
-        if value==0 or value=='OFF':
+        if value == 0 or value == 'OFF':
             val = 0
         else:
             val = 1
         self._writeReg('CFG', 'EN_G_TBB', val)
-        
+
     #
     # TBB_ICT0 (0x0106)
     #
 
     # ICT_LPFS5_F_TBB<4:0>
-    @property 
+    @property
     def ICT_LPFS5_F_TBB(self):
         """
         Get the value of ICT_LPFS5_F_TBB<4:0>
@@ -202,12 +204,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of ICT_LPFS5_F_TBB<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT0', 'ICT_LPFS5_F_TBB<4:0>', value)
 
     # ICT_LPFS5_PT_TBB<4:0>
-    @property 
+    @property
     def ICT_LPFS5_PT_TBB(self):
         """
         Get the value of ICT_LPFS5_PT_TBB<4:0>
@@ -219,12 +221,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of ICT_LPFS5_PT_TBB<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT0', 'ICT_LPFS5_PT_TBB<4:0>', value)
 
     # ICT_LPF_H_PT_TBB<4:0>
-    @property 
+    @property
     def ICT_LPF_H_PT_TBB(self):
         """
         Get the value of ICT_LPF_H_PT_TBB<4:0>
@@ -236,7 +238,7 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of ICT_LPF_H_PT_TBB<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT0', 'ICT_LPF_H_PT_TBB<4:0>', value)
 
@@ -245,7 +247,7 @@ class LMS7002_TBB(LMS7002_base):
     #
 
     # ICT_LPFH_F_TBB<4:0>
-    @property 
+    @property
     def ICT_LPFH_F_TBB(self):
         """
         Get the value of ICT_LPFH_F_TBB<4:0>
@@ -257,12 +259,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of ICT_LPFH_F_TBB<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT1', 'ICT_LPFH_F_TBB<4:0>', value)
 
     # ICT_LPFLAD_F_TBB<4:0>
-    @property 
+    @property
     def ICT_LPFLAD_F_TBB(self):
         """
         Get the value of ICT_LPFLAD_F_TBB<4:0>
@@ -274,12 +276,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of ICT_LPFLAD_F_TBB<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT1', 'ICT_LPFLAD_F_TBB<4:0>', value)
 
     # ICT_LPFLAD_PT_TBB<4:0>
-    @property 
+    @property
     def ICT_LPFLAD_PT_TBB(self):
         """
         Get the value of ICT_LPFLAD_PT_TBB<4:0>
@@ -291,7 +293,7 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of ICT_LPFLAD_PT_TBB<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('ICT1', 'ICT_LPFLAD_PT_TBB<4:0>', value)
 
@@ -300,7 +302,7 @@ class LMS7002_TBB(LMS7002_base):
     #
 
     # CG_IAMP_TBB<5:0>
-    @property 
+    @property
     def CG_IAMP_TBB(self):
         """
         Get the value of CG_IAMP_TBB<5:0>
@@ -312,14 +314,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of CG_IAMP_TBB<5:0>
         """
-        if not(0 <= value <= 63):
+        if not (0 <= value <= 63):
             raise ValueError("Value must be [0..63]")
         self._writeReg('IAMP', 'CG_IAMP_TBB<5:0>', value)
 
-
-
     # ICT_IAMP_FRP_TBB<4:0>
-    @property 
+    @property
     def ICT_IAMP_FRP_TBB(self):
         """
         Get the value of ICT_IAMP_FRP_TBB<4:0>
@@ -331,12 +331,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of ICT_IAMP_FRP_TBB<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('IAMP', 'ICT_IAMP_FRP_TBB<4:0>', value)
 
     # ICT_IAMP_GG_FRP_TBB<4:0>
-    @property 
+    @property
     def ICT_IAMP_GG_FRP_TBB(self):
         """
         Get the value of ICT_IAMP_GG_FRP_TBB<4:0>
@@ -348,7 +348,7 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of ICT_IAMP_GG_FRP_TBB<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('IAMP', 'ICT_IAMP_GG_FRP_TBB<4:0>', value)
 
@@ -357,7 +357,7 @@ class LMS7002_TBB(LMS7002_base):
     #
 
     # RCAL_LPFH_TBB<7:0>
-    @property 
+    @property
     def RCAL_LPFH_TBB(self):
         """
         Get the value of RCAL_LPFH_TBB<7:0>
@@ -369,12 +369,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of RCAL_LPFH_TBB<7:0>
         """
-        if not(0 <= value <= 255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('LPF0', 'RCAL_LPFH_TBB<7:0>', value)
 
     # RCAL_LPFLAD_TBB<7:0>
-    @property 
+    @property
     def RCAL_LPFLAD_TBB(self):
         """
         Get the value of RCAL_LPFLAD_TBB<7:0>
@@ -386,16 +386,16 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of RCAL_LPFLAD_TBB<7:0>
         """
-        if not(0 <= value <= 255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('LPF0', 'RCAL_LPFLAD_TBB<7:0>', value)
-        
+
     #
     # TBB_LPF1 (0x010A)
     #
-    
+
     # TSTIN_TBB<1:0>
-    @property 
+    @property
     def TSTIN_TBB(self):
         """
         Get the value of TSTIN_TBB<1:0>
@@ -407,12 +407,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of TSTIN_TBB<1:0>
         """
-        if not(0 <= value <= 3):
+        if not (0 <= value <= 3):
             raise ValueError("Value must be [0..3]")
         self._writeReg('LPF1', 'TSTIN_TBB<1:0>', value)
 
     # BYPLADDER_TBB
-    @property 
+    @property
     def BYPLADDER_TBB(self):
         """
         Get the value of BYPLADDER_TBB
@@ -426,14 +426,14 @@ class LMS7002_TBB(LMS7002_base):
         """
         if value not in [0, 1, 'OFF', 'BYP']:
             raise ValueError("Value must be [0,1,'BYP', 'OFF']")
-        if value==0 or value=='OFF':
+        if value == 0 or value == 'OFF':
             val = 0
         else:
             val = 1
         self._writeReg('LPF1', 'BYPLADDER_TBB', val)
-                    
+
     # CCAL_LPFLAD_TBB<4:0>
-    @property 
+    @property
     def CCAL_LPFLAD_TBB(self):
         """
         Get the value of CCAL_LPFLAD_TBB<4:0>
@@ -445,12 +445,12 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of CCAL_LPFLAD_TBB<4:0>
         """
-        if not(0 <= value <= 31):
+        if not (0 <= value <= 31):
             raise ValueError("Value must be [0..31]")
         self._writeReg('LPF1', 'CCAL_LPFLAD_TBB<4:0>', value)
 
     # RCAL_LPFS5_TBB<7:0>
-    @property 
+    @property
     def RCAL_LPFS5_TBB(self):
         """
         Get the value of RCAL_LPFS5_TBB<7:0>
@@ -462,7 +462,7 @@ class LMS7002_TBB(LMS7002_base):
         """
         Set the value of RCAL_LPFS5_TBB<7:0>
         """
-        if not(0 <= value <= 255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('LPF0', 'RCAL_LPFS5_TBB<7:0>', value)
 
@@ -471,16 +471,15 @@ class LMS7002_TBB(LMS7002_base):
     #
 
     # R5_LPF_BYP_TBB
-    @property 
+    @property
     def R5_LPF_BYP_TBB(self):
         """
         Get the value of R5_LPF_BYP_TBB
         """
-        if self.chip.chipID == self.chip.chipIDMR3:        
+        if self.chip.chipID == self.chip.chipIDMR3:
             return self._readReg('LPF_BYP', 'R5_LPF_BYP_TBB')
         else:
-            raise ValueError("Bitfield R5_LPF_BYP_TBB is not supported on chip version "+str(self.chip.chipID))
-
+            raise ValueError("Bitfield R5_LPF_BYP_TBB is not supported on chip version " + str(self.chip.chipID))
 
     @R5_LPF_BYP_TBB.setter
     def R5_LPF_BYP_TBB(self, value):
@@ -490,12 +489,10 @@ class LMS7002_TBB(LMS7002_base):
         if self.chip.chipID == self.chip.chipIDMR3:
             if value not in [0, 1, 'USE', 'BYP']:
                 raise ValueError("Value must be [0,1,'USE', 'OFF']")
-            if value==0 or value=='OFF':
+            if value == 0 or value == 'OFF':
                 val = 0
             else:
                 val = 1
-            self._writeReg('LPF_BYP', 'R5_LPF_BYP_TBB', val)            
+            self._writeReg('LPF_BYP', 'R5_LPF_BYP_TBB', val)
         else:
-            raise ValueError("Bitfield R5_LPF_BYP_TBB is not supported on chip version "+str(self.chip.chipID))
-        
-
+            raise ValueError("Bitfield R5_LPF_BYP_TBB is not supported on chip version " + str(self.chip.chipID))

@@ -1,16 +1,18 @@
-#***************************************************************
-#* Name:      LMS7002_RxTSP.py
-#* Purpose:   Class implementing LMS7002 RxTSP functions
-#* Author:    Lime Microsystems ()
-#* Created:   2016-11-14
-#* Copyright: Lime Microsystems (limemicro.com)
-#* License:
-#**************************************************************
+# ***************************************************************
+# * Name:      LMS7002_RxTSP.py
+# * Purpose:   Class implementing LMS7002 RxTSP functions
+# * Author:    Lime Microsystems ()
+# * Created:   2016-11-14
+# * Copyright: Lime Microsystems (limemicro.com)
+# * License:
+# **************************************************************
 
-from LMS7002_base import *
+from pyLMS7002Soapy.LMS7002_base import LMS7002_base
+
 
 class LMS7002_RxTSP(LMS7002_base):
-    __slots__ = []    # Used to generate error on typos
+    __slots__ = []  # Used to generate error on typos
+
     def __init__(self, chip, Channel):
         if Channel not in ['A', 'B']:
             raise ValueError("Parameter Channel must be 'A' or 'B'")
@@ -23,7 +25,7 @@ class LMS7002_RxTSP(LMS7002_base):
     #
 
     # CAPTURE
-    @property 
+    @property
     def CAPTURE(self):
         """
         Get the value of CAPTURE
@@ -35,12 +37,12 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of CAPTURE
         """
-        if value not in [0,1]:
+        if value not in [0, 1]:
             raise ValueError("Value must be [0,1]")
         self._writeReg('CFG', 'CAPTURE', value)
 
     # CAPSEL<1:0>
-    @property 
+    @property
     def CAPSEL(self):
         """
         Get the value of CAPSEL<1:0>
@@ -52,16 +54,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of CAPSEL<1:0>
         """
-        if value not in [0,1, 'RSSI', 'ADC']:
+        if value not in [0, 1, 'RSSI', 'ADC']:
             raise ValueError("Value must be [0,1, 'RSSI', 'ADC']")
-        if value==0 or value=='RSSI':
+        if value == 0 or value == 'RSSI':
             val = 0
         else:
-            val = 1    
+            val = 1
         self._writeReg('CFG', 'CAPSEL<1:0>', val)
 
     # CAPSEL_ADC
-    @property 
+    @property
     def CAPSEL_ADC(self):
         """
         Get the value of CAPSEL_ADC
@@ -69,7 +71,7 @@ class LMS7002_RxTSP(LMS7002_base):
         if self.chip.chipID == self.chip.chipIDMR3:
             return self._readReg('CFG', 'CAPSEL_ADC')
         else:
-            raise ValueError("Bitfield CAPSEL_ADC is not supported on chip version "+str(self.chip.chipID))
+            raise ValueError("Bitfield CAPSEL_ADC is not supported on chip version " + str(self.chip.chipID))
 
     @CAPSEL_ADC.setter
     def CAPSEL_ADC(self, value):
@@ -77,19 +79,18 @@ class LMS7002_RxTSP(LMS7002_base):
         Set the value of CAPSEL_ADC
         """
         if self.chip.chipID == self.chip.chipIDMR3:
-            if value not in [0,1, 'IN', 'OUT']:
+            if value not in [0, 1, 'IN', 'OUT']:
                 raise ValueError("Value must be [0,1, 'IN', 'OUT']")
-            if value==0 or value=='IN':
+            if value == 0 or value == 'IN':
                 val = 0
             else:
-                val = 1    
+                val = 1
             self._writeReg('CFG', 'CAPSEL_ADC', val)
         else:
-            raise ValueError("Bitfield CAPSEL_ADC is not supported on chip version "+str(self.chip.chipID))
-
+            raise ValueError("Bitfield CAPSEL_ADC is not supported on chip version " + str(self.chip.chipID))
 
     # TSGFC
-    @property 
+    @property
     def TSGFC(self):
         """
         Get the value of TSGFC
@@ -101,16 +102,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of TSGFC
         """
-        if value not in [0,1, '-6dB', 'FULL']:
+        if value not in [0, 1, '-6dB', 'FULL']:
             raise ValueError("Value must be [0,1, '-6dB', 'FULL']")
-        if value==0 or value=='-6dB':
+        if value == 0 or value == '-6dB':
             val = 0
         else:
-            val = 1    
+            val = 1
         self._writeReg('CFG', 'TSGFC', val)
 
     # TSGFCW
-    @property 
+    @property
     def TSGFCW(self):
         """
         Get the value of TSGFCW
@@ -122,16 +123,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of TSGFCW
         """
-        if value not in [1,2, 'CLK/8', 'CLK/4']:
+        if value not in [1, 2, 'CLK/8', 'CLK/4']:
             raise ValueError("Value must be [1,2, 'CLK/8', 'CLK/4']")
-        if value==1 or value=='CLK/8':
+        if value == 1 or value == 'CLK/8':
             val = 1
         else:
-            val = 2    
+            val = 2
         self._writeReg('CFG', 'TSGFCW<1:0>', val)
 
     # TSGDCLDQ
-    @property 
+    @property
     def TSGDCLDQ(self):
         """
         Get the value of TSGDCLDQ
@@ -143,12 +144,12 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of TSGDCLDQ
         """
-        if value not in [0,1]:
+        if value not in [0, 1]:
             raise ValueError("Value must be [0,1]")
         self._writeReg('CFG', 'TSGDCLDQ', value)
 
     # TSGDCLDI
-    @property 
+    @property
     def TSGDCLDI(self):
         """
         Get the value of TSGDCLDI
@@ -160,12 +161,12 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of TSGDCLDI
         """
-        if value not in [0,1]:
+        if value not in [0, 1]:
             raise ValueError("Value must be [0,1]")
         self._writeReg('CFG', 'TSGDCLDI', value)
 
     # TSGSWAPIQ
-    @property 
+    @property
     def TSGSWAPIQ(self):
         """
         Get the value of TSGSWAPIQ
@@ -177,12 +178,12 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of TSGSWAPIQ
         """
-        if value not in [0,1]:
+        if value not in [0, 1]:
             raise ValueError("Value must be [0,1]")
         self._writeReg('CFG', 'TSGSWAPIQ', value)
 
     # TSGMODE
-    @property 
+    @property
     def TSGMODE(self):
         """
         Get the value of TSGMODE
@@ -194,16 +195,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of TSGMODE
         """
-        if value not in [0,1, 'NCO', 'DC']:
+        if value not in [0, 1, 'NCO', 'DC']:
             raise ValueError("Value must be [0,1, 'NCO', 'DC']")
-        if value==0 or value=='NCO':
+        if value == 0 or value == 'NCO':
             val = 0
         else:
-            val = 1    
+            val = 1
         self._writeReg('CFG', 'TSGMODE', val)
 
     # INSEL
-    @property 
+    @property
     def INSEL(self):
         """
         Get the value of INSEL
@@ -215,16 +216,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of INSEL
         """
-        if value not in [0,1, 'LML', 'TEST']:
+        if value not in [0, 1, 'LML', 'TEST']:
             raise ValueError("Value must be [0,1, 'LML', 'TEST']")
-        if value==0 or value=='LML':
+        if value == 0 or value == 'LML':
             val = 0
         else:
-            val = 1    
+            val = 1
         self._writeReg('CFG', 'INSEL', val)
 
     # EN
-    @property 
+    @property
     def EN(self):
         """
         Get the value of EN
@@ -236,18 +237,18 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of EN
         """
-        if value not in [0,1, 'OFF', 'ON']:
+        if value not in [0, 1, 'OFF', 'ON']:
             raise ValueError("Value must be [0,1, 'OFF', 'ON']")
-        if value==0 or value=='OFF':
+        if value == 0 or value == 'OFF':
             val = 0
         else:
-            val = 1    
+            val = 1
         self._writeReg('CFG', 'EN', val)
 
     #
     # RXTSP_GCORRQ (0x0401) GCORRQ<10:0>
     #
-    @property 
+    @property
     def GCORRQ(self):
         """
         Get the value of GCORRQ
@@ -259,14 +260,14 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GCORRQ
         """
-        if not(0 <= value <= 2047):
+        if not (0 <= value <= 2047):
             raise ValueError("Value must be [0..2047]")
         self._writeReg('GCORRQ', 'GCORRQ<10:0>', value)
 
     #
     # RXTSP_GCORRI (0x0402) GCORRI<10:0>
     #
-    @property 
+    @property
     def GCORRI(self):
         """
         Get the value of GCORRI
@@ -278,16 +279,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GCORRI
         """
-        if not(0 <= value <= 2047):
+        if not (0 <= value <= 2047):
             raise ValueError("Value must be [0..2047]")
         self._writeReg('GCORRI', 'GCORRI<10:0>', value)
-    
+
     #
     # RXTSP_INTPH (0x0403)
     #
-    
+
     # HBD_OVR<2:0>
-    @property 
+    @property
     def HBD_OVR(self):
         """
         Get the value of HBD_OVR
@@ -299,45 +300,45 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of HBD_OVR
         """
-        if value not in [0,1,2,3,4,7, '2', '4', '8', '16', '32', 'BYP']:
+        if value not in [0, 1, 2, 3, 4, 7, '2', '4', '8', '16', '32', 'BYP']:
             raise ValueError("Value must be [0,1,2,3,4,7, '2', '4', '8', '16', '32', 'BYP']")
-        if value==0 or value=='2':
+        if value == 0 or value == '2':
             val = 0
-        elif value==1 or value=='4':
+        elif value == 1 or value == '4':
             val = 1
-        elif value==2 or value=='8':
+        elif value == 2 or value == '8':
             val = 2
-        elif value==3 or value=='16':
+        elif value == 3 or value == '16':
             val = 3
-        elif value==4 or value=='32':
+        elif value == 4 or value == '32':
             val = 4
         else:
             val = 7
         self._writeReg('INTPH', 'HBD_OVR<2:0>', val)
 
     # IQCORR<11:0>
-    @property 
+    @property
     def IQCORR(self):
         """
         Get the value of IQCORR<11:0>
         """
-        return self.twosComplementToInt(self._readReg('INTPH', 'IQCORR<11:0>'),12)
+        return self.twosComplementToInt(self._readReg('INTPH', 'IQCORR<11:0>'), 12)
 
     @IQCORR.setter
     def IQCORR(self, value):
         """
         Set the value of IQCORR<11:0>
         """
-        if not(-2048 <= value <= 2047):
+        if not (-2048 <= value <= 2047):
             raise ValueError("Value must be [-2048..2047]")
-        self._writeReg('INTPH', 'IQCORR<11:0>', self.intTo2sComplement(value,12))
+        self._writeReg('INTPH', 'IQCORR<11:0>', self.intTo2sComplement(value, 12))
 
     #
     # RXTSP_DCCORR_AVG (0x0404)
     #
 
     # HBD_DLY
-    @property 
+    @property
     def HBD_DLY(self):
         """
         Get the value of HBD_DLY<2:0>
@@ -345,8 +346,7 @@ class LMS7002_RxTSP(LMS7002_base):
         if self.chip.chipID == self.chip.chipIDMR3:
             return self._readReg('DCCORRAVG', 'HBD_DLY<2:0>')
         else:
-            raise ValueError("Bitfield HBD_DLY<2:0> is not supported on chip version "+str(self.chip.chipID))
-
+            raise ValueError("Bitfield HBD_DLY<2:0> is not supported on chip version " + str(self.chip.chipID))
 
     @HBD_DLY.setter
     def HBD_DLY(self, value):
@@ -354,15 +354,14 @@ class LMS7002_RxTSP(LMS7002_base):
         Set the value of HBD_DLY<2:0>
         """
         if self.chip.chipID == self.chip.chipIDMR3:
-            if not(0 <= value <= 7):
+            if not (0 <= value <= 7):
                 raise ValueError("Value must be [0..7]")
             self._writeReg('DCCORRAVG', 'HBD_DLY<2:0>', value)
         else:
-            raise ValueError("Bitfield HBD_DLY<2:0> is not supported on chip version "+str(self.chip.chipID))
-
+            raise ValueError("Bitfield HBD_DLY<2:0> is not supported on chip version " + str(self.chip.chipID))
 
     # DCCORR_AVG<2:0>
-    @property 
+    @property
     def DCCORR_AVG(self):
         """
         Get the value of DCCORR_AVG<2:0>
@@ -374,16 +373,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of DCCORR_AVG<2:0>
         """
-        if not(0 <= value <= 7):
+        if not (0 <= value <= 7):
             raise ValueError("Value must be [0..7]")
         self._writeReg('DCCORRAVG', 'DCCORR_AVG<2:0>', value)
 
     #
     # RXTSP_GFIR1 (0x0405)
     #
-    
+
     # GFIR1_L<2:0>
-    @property 
+    @property
     def GFIR1_L(self):
         """
         Get the value of GFIR1_L<2:0>
@@ -395,12 +394,12 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GFIR1_L<2:0>
         """
-        if not(0 <= value <= 7):
+        if not (0 <= value <= 7):
             raise ValueError("Value must be [0..7]")
         self._writeReg('GFIR1', 'GFIR1_L<2:0>', value)
 
     # GFIR1_N<7:0>
-    @property 
+    @property
     def GFIR1_N(self):
         """
         Get the value of GFIR1_N<7:0>
@@ -412,16 +411,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GFIR1_N<7:0>
         """
-        if not(0 <= value <= 255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('GFIR1', 'GFIR1_N<7:0>', value)
 
     #
     # RXTSP_GFIR2 (0x0406)
     #
-    
+
     # GFIR2_L<2:0>
-    @property 
+    @property
     def GFIR2_L(self):
         """
         Get the value of GFIR2_L<2:0>
@@ -433,12 +432,12 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GFIR2_L<2:0>
         """
-        if not(0 <= value <= 7):
+        if not (0 <= value <= 7):
             raise ValueError("Value must be [0..7]")
         self._writeReg('GFIR2', 'GFIR2_L<2:0>', value)
 
     # GFIR2_N<7:0>
-    @property 
+    @property
     def GFIR2_N(self):
         """
         Get the value of GFIR2_N<7:0>
@@ -450,16 +449,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GFIR2_N<7:0>
         """
-        if not(0 <= value <= 255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('GFIR2', 'GFIR2_N<7:0>', value)
 
     #
     # RXTSP_GFIR3 (0x0407)
     #
-    
+
     # GFIR3_L<2:0>
-    @property 
+    @property
     def GFIR3_L(self):
         """
         Get the value of GFIR3_L<2:0>
@@ -471,12 +470,12 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GFIR3_L<2:0>
         """
-        if not(0 <= value <= 7):
+        if not (0 <= value <= 7):
             raise ValueError("Value must be [0..7]")
         self._writeReg('GFIR3', 'GFIR3_L<2:0>', value)
 
     # GFIR3_N<7:0>
-    @property 
+    @property
     def GFIR3_N(self):
         """
         Get the value of GFIR3_N<7:0>
@@ -488,38 +487,37 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GFIR3_N<7:0>
         """
-        if not(0 <= value <= 255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('GFIR3', 'GFIR3_N<7:0>', value)
-
 
     #
     # AGC_K
     #
 
-    @property 
+    @property
     def AGC_K(self):
         """
         Get the value of AGC<17:0>
         """
         valH = self._readReg('AGC1', 'AGC_K<17:16>')
-        valL = self._readReg('AGC0', 'AGC_K<15:0>')        
-        return (valH<<16)+valL
+        valL = self._readReg('AGC0', 'AGC_K<15:0>')
+        return (valH << 16) + valL
 
     @AGC_K.setter
     def AGC_K(self, value):
         """
         Set the value of AGC_K
         """
-        if not(0 <= value <= 2**18-1):
+        if not (0 <= value <= 2 ** 18 - 1):
             raise ValueError("Value must be [0..2^18-1]")
         valL = value & 0xFFFF
-        valH = (value>>16) & 0x3
+        valH = (value >> 16) & 0x3
         self._writeReg('AGC1', 'AGC_K<17:16>', valH)
         self._writeReg('AGC0', 'AGC_K<15:0>', valL)
 
     # AGC_DESIRED<11:0>
-    @property 
+    @property
     def AGC_DESIRED(self):
         """
         Get the value of AGC_DESIRED<11:0>
@@ -531,7 +529,7 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of AGC_DESIRED<11:0>
         """
-        if not(0 <= value <= 2**12-1):
+        if not (0 <= value <= 2 ** 12 - 1):
             raise ValueError("Value must be [0..2^12-1]")
         self._writeReg('AGC1', 'AGC_DESIRED<11:0>', value)
 
@@ -540,7 +538,7 @@ class LMS7002_RxTSP(LMS7002_base):
     #
 
     # RSSI_MODE<1:0>
-    @property 
+    @property
     def RSSI_MODE(self):
         """
         Get the value of RSSI_MODE<1:0>
@@ -552,20 +550,20 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of RSSI_MODE<1:0>
         """
-        if value not in [0,1,2,'RSSI', 'I', 'Q']:
+        if value not in [0, 1, 2, 'RSSI', 'I', 'Q']:
             raise ValueError("Value must be [0,1,2,'RSSI', 'I', 'Q']")
-        if value==0 or value=='RSSI':
+        if value == 0 or value == 'RSSI':
             val = 0
-        elif value==1 or value=='I':
+        elif value == 1 or value == 'I':
             val = 1
-        elif value==2 or value=='Q':
+        elif value == 2 or value == 'Q':
             val = 2
         else:
             raise ValueError("Value of 3 is not allowed")
         self._writeReg('AGC2', 'RSSI_MODE<1:0>', val)
 
     # AGC_MODE<1:0>
-    @property 
+    @property
     def AGC_MODE(self):
         """
         Get the value of AGC_MODE<1:0>
@@ -577,18 +575,18 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of AGC_MODE<1:0>
         """
-        if value not in [0,1,2,3,'AGC', 'RSSI', 'BYP']:
+        if value not in [0, 1, 2, 3, 'AGC', 'RSSI', 'BYP']:
             raise ValueError("Value must be [0,1,2,3,'AGC', 'RSSI', 'BYP']")
-        if value==0 or value=='AGC':
+        if value == 0 or value == 'AGC':
             val = 0
-        elif value==1 or value=='RSSI':
+        elif value == 1 or value == 'RSSI':
             val = 1
         else:
             val = 2
         self._writeReg('AGC2', 'AGC_MODE<1:0>', val)
 
     # AGC_AVG<2:0>
-    @property 
+    @property
     def AGC_AVG(self):
         """
         Get the value of AGC_AVG<2:0>
@@ -600,14 +598,14 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of AGC_AVG<2:0>
         """
-        if not(0 <= value <= 7):
+        if not (0 <= value <= 7):
             raise ValueError("Value must be [0..7]")
         self._writeReg('AGC2', 'AGC_AVG<2:0>', value)
 
     #
     # RXTSP_DC (0x040B) DC_REG<15:0>
     #
-    @property 
+    @property
     def DC_REG(self):
         """
         Get the value of DC_REG<15:0>
@@ -619,17 +617,17 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of DC_REG<15:0>
         """
-        if not(0 <= value <= 65535):
+        if not (0 <= value <= 65535):
             raise ValueError("Value must be [0..65535]")
-        self._writeReg('DC', 'DC_REG<15:0>', value)        
+        self._writeReg('DC', 'DC_REG<15:0>', value)
 
+        #
 
-    #
     # RXTSP_CMIXBYP (0x040C)
     #
 
     # CMIX_GAIN<1:0>
-    @property 
+    @property
     def CMIX_GAIN(self):
         """
         Get the value of CMIX_GAIN<1:0>
@@ -641,18 +639,18 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of CMIX_GAIN<1:0>
         """
-        if value not in [0,1,2,3,'0dB', '6dB', '-6dB']:
+        if value not in [0, 1, 2, 3, '0dB', '6dB', '-6dB']:
             raise ValueError("Value must be [0,1,2,3,'0dB', '6dB', '-6dB']")
-        if value==0 or value=='0dB':
+        if value == 0 or value == '0dB':
             val = 0
-        elif value==1 or value=='6dB':
+        elif value == 1 or value == '6dB':
             val = 1
         else:
             val = 2
         self._writeReg('CMIXBYP', 'CMIX_GAIN<1:0>', val)
 
     # CMIX_SC
-    @property 
+    @property
     def CMIX_SC(self):
         """
         Get the value of CMIX_SC
@@ -664,16 +662,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of CMIX_SC
         """
-        if value not in [0,1,'UP', 'DOWN']:
+        if value not in [0, 1, 'UP', 'DOWN']:
             raise ValueError("Value must be [0,1,'UP', 'DOWN']")
-        if value==0 or value=='UP':
+        if value == 0 or value == 'UP':
             val = 0
         else:
             val = 1
         self._writeReg('CMIXBYP', 'CMIX_SC', val)
 
     # CMIX_GAIN2
-    @property 
+    @property
     def CMIX_GAIN2(self):
         """
         Get the value of CMIX_GAIN2
@@ -681,7 +679,7 @@ class LMS7002_RxTSP(LMS7002_base):
         if self.chip.chipID == self.chip.chipIDMR3:
             return self._readReg('CMIXBYP', 'CMIX_GAIN2')
         else:
-            raise ValueError("Bitfield CMIX_GAIN2 is not supported on chip version "+str(self.chip.chipID))
+            raise ValueError("Bitfield CMIX_GAIN2 is not supported on chip version " + str(self.chip.chipID))
 
     @CMIX_GAIN2.setter
     def CMIX_GAIN2(self, value):
@@ -689,14 +687,14 @@ class LMS7002_RxTSP(LMS7002_base):
         Set the value of CMIX_GAIN2
         """
         if self.chip.chipID == self.chip.chipIDMR3:
-            if value not in [0,1]:
+            if value not in [0, 1]:
                 raise ValueError("Value must be [0,1]")
-            self._writeReg('CMIXBYP', 'CMIX_GAIN2', val)
+            self._writeReg('CMIXBYP', 'CMIX_GAIN2', value)
         else:
-            raise ValueError("Bitfield CMIX_GAIN2 is not supported on chip version "+str(self.chip.chipID))
+            raise ValueError("Bitfield CMIX_GAIN2 is not supported on chip version " + str(self.chip.chipID))
 
     # CMIX_BYP
-    @property 
+    @property
     def CMIX_BYP(self):
         """
         Get the value of CMIX_BYP
@@ -708,16 +706,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of CMIX_BYP
         """
-        if value not in [0,1,'USE', 'BYP']:
+        if value not in [0, 1, 'USE', 'BYP']:
             raise ValueError("Value must be [0,1,'USE', 'BYP']")
-        if value==0 or value=='USE':
+        if value == 0 or value == 'USE':
             val = 0
         else:
             val = 1
         self._writeReg('CMIXBYP', 'CMIX_BYP', val)
 
     # AGC_BYP
-    @property 
+    @property
     def AGC_BYP(self):
         """
         Get the value of AGC_BYP
@@ -729,16 +727,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of AGC_BYP
         """
-        if value not in [0,1,'USE', 'BYP']:
+        if value not in [0, 1, 'USE', 'BYP']:
             raise ValueError("Value must be [0,1,'USE', 'BYP']")
-        if value==0 or value=='USE':
+        if value == 0 or value == 'USE':
             val = 0
         else:
             val = 1
         self._writeReg('CMIXBYP', 'AGC_BYP', val)
 
     # GFIR3_BYP
-    @property 
+    @property
     def GFIR3_BYP(self):
         """
         Get the value of GFIR3_BYP
@@ -750,16 +748,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GFIR3_BYP
         """
-        if value not in [0,1,'USE', 'BYP']:
+        if value not in [0, 1, 'USE', 'BYP']:
             raise ValueError("Value must be [0,1,'USE', 'BYP']")
-        if value==0 or value=='USE':
+        if value == 0 or value == 'USE':
             val = 0
         else:
             val = 1
         self._writeReg('CMIXBYP', 'GFIR3_BYP', val)
 
     # GFIR2_BYP
-    @property 
+    @property
     def GFIR2_BYP(self):
         """
         Get the value of GFIR2_BYP
@@ -771,16 +769,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GFIR2_BYP
         """
-        if value not in [0,1,'USE', 'BYP']:
+        if value not in [0, 1, 'USE', 'BYP']:
             raise ValueError("Value must be [0,1,'USE', 'BYP']")
-        if value==0 or value=='USE':
+        if value == 0 or value == 'USE':
             val = 0
         else:
             val = 1
         self._writeReg('CMIXBYP', 'GFIR2_BYP', val)
 
     # GFIR1_BYP
-    @property 
+    @property
     def GFIR1_BYP(self):
         """
         Get the value of GFIR1_BYP
@@ -792,16 +790,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GFIR1_BYP
         """
-        if value not in [0,1,'USE', 'BYP']:
+        if value not in [0, 1, 'USE', 'BYP']:
             raise ValueError("Value must be [0,1,'USE', 'BYP']")
-        if value==0 or value=='USE':
+        if value == 0 or value == 'USE':
             val = 0
         else:
             val = 1
         self._writeReg('CMIXBYP', 'GFIR1_BYP', val)
 
     # DC_BYP
-    @property 
+    @property
     def DC_BYP(self):
         """
         Get the value of DC_BYP
@@ -813,16 +811,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of DC_BYP
         """
-        if value not in [0,1,'USE', 'BYP']:
+        if value not in [0, 1, 'USE', 'BYP']:
             raise ValueError("Value must be [0,1,'USE', 'BYP']")
-        if value==0 or value=='USE':
+        if value == 0 or value == 'USE':
             val = 0
         else:
             val = 1
         self._writeReg('CMIXBYP', 'DC_BYP', val)
 
     # GC_BYP
-    @property 
+    @property
     def GC_BYP(self):
         """
         Get the value of GC_BYP
@@ -834,16 +832,16 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of GC_BYP
         """
-        if value not in [0,1,'USE', 'BYP']:
+        if value not in [0, 1, 'USE', 'BYP']:
             raise ValueError("Value must be [0,1,'USE', 'BYP']")
-        if value==0 or value=='USE':
+        if value == 0 or value == 'USE':
             val = 0
         else:
             val = 1
         self._writeReg('CMIXBYP', 'GC_BYP', val)
 
     # PH_BYP
-    @property 
+    @property
     def PH_BYP(self):
         """
         Get the value of PH_BYP
@@ -855,9 +853,9 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of PH_BYP
         """
-        if value not in [0,1,'USE', 'BYP']:
+        if value not in [0, 1, 'USE', 'BYP']:
             raise ValueError("Value must be [0,1,'USE', 'BYP']")
-        if value==0 or value=='USE':
+        if value == 0 or value == 'USE':
             val = 0
         else:
             val = 1
@@ -866,7 +864,7 @@ class LMS7002_RxTSP(LMS7002_base):
     #
     # RXTSP_CAPDL (0x040E) CAPDL<15:0>
     #
-    @property 
+    @property
     def CAPDL(self):
         """
         Get the value of CAPDL<15:0>
@@ -878,14 +876,15 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of CAPDL<15:0>
         """
-        if not(0 <= value <= 65535):
+        if not (0 <= value <= 65535):
             raise ValueError("Value must be [0..65535]")
-        self._writeReg('CAPDL', 'CAPDL<15:0>', value)        
+        self._writeReg('CAPDL', 'CAPDL<15:0>', value)
 
-    #
+        #
+
     # RXTSP_CAPDH (0x040F) CAPDH<15:0>
     #
-    @property 
+    @property
     def CAPDH(self):
         """
         Get the value of CAPDH<15:0>
@@ -897,32 +896,33 @@ class LMS7002_RxTSP(LMS7002_base):
         """
         Set the value of CAPDH<15:0>
         """
-        if not(0 <= value <= 65535):
+        if not (0 <= value <= 65535):
             raise ValueError("Value must be [0..65535]")
-        self._writeReg('CAPDH', 'CAPDH<15:0>', value)        
+        self._writeReg('CAPDH', 'CAPDH<15:0>', value)
 
-    #
+        #
+
     # Convenience functions
     #
 
-    @property 
+    @property
     def CAPD(self):
         self.CAPTURE = 0
         self.CAPTURE = 1
-        self.CAPTURE = 0    
+        self.CAPTURE = 0
         CAPDH = self.CAPDH
         CAPDL = self.CAPDL
         return (CAPDH << 2) + CAPDL
-        
-    @property 
+
+    @property
     def RSSI(self):
         oldVal = self.CAPSEL
         self.CAPSEL = 'RSSI'
         ret = self.CAPD
         self.CAPSEL = oldVal
         return ret
-        
-    @property 
+
+    @property
     def ADCIQ(self):
         # Returns (I,Q)
         if self.chip.chipID == self.chip.chipIDMR3:
@@ -936,9 +936,8 @@ class LMS7002_RxTSP(LMS7002_base):
         self.CAPSEL = 'ADC'
         self.CAPTURE = 0
         self.CAPTURE = 1
-        self.CAPTURE = 0    
-        CAPDH = self.twosComplementToInt(self.CAPDH,nBits)
-        CAPDL = self.twosComplementToInt(self.CAPDL,nBits)
+        self.CAPTURE = 0
+        CAPDH = self.twosComplementToInt(self.CAPDH, nBits)
+        CAPDL = self.twosComplementToInt(self.CAPDL, nBits)
         self.CAPSEL = oldVal
-        return (CAPDL, CAPDH)
-
+        return CAPDL, CAPDH

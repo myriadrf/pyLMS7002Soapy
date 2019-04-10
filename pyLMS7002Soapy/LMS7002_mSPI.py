@@ -1,23 +1,26 @@
-#***************************************************************
-#* Name:      LMS7002_mSPI.py
-#* Purpose:   Class implementing LMS7002 mSPI functions
-#* Author:    Lime Microsystems ()
-#* Created:   2016-11-14
-#* Copyright: Lime Microsystems (limemicro.com)
-#* License:
-#**************************************************************
+# ***************************************************************
+# * Name:      LMS7002_mSPI.py
+# * Purpose:   Class implementing LMS7002 mSPI functions
+# * Author:    Lime Microsystems ()
+# * Created:   2016-11-14
+# * Copyright: Lime Microsystems (limemicro.com)
+# * License:
+# **************************************************************
 
-from LMS7002_base import *
+from pyLMS7002Soapy.LMS7002_base import LMS7002_base
 import time
 
+
 class LMS7002_mSPI(LMS7002_base):
-    __slots__=[]    # Used to generate error on typos
+    __slots__ = []  # Used to generate error on typos
+
     def __init__(self, chip):
         self.chip = chip
         self.channel = None
         self.prefix = "mSPI_"
 
-    def getOpCode(self, opCode):
+    @staticmethod
+    def getOpCode(opCode):
         if opCode == "SFR":
             return 0x7E
         elif opCode == "IRAM_READ":
@@ -27,13 +30,14 @@ class LMS7002_mSPI(LMS7002_base):
         elif opCode == "RUN_INSTR":
             return 0x74
         else:
-            raise ValueError("Unknown MCU opcode :"+str(opCode))
+            raise ValueError("Unknown MCU opcode :" + str(opCode))
 
     #
     # Auxiliary functions
     #
 
-    def _readHex(self, hexFileName, isString=False):
+    @staticmethod
+    def _readHex(hexFileName, isString=False):
         """
         Read Intel hex file.
         Returns a 16384 or 8192 bytes long list containing the MCU program.
@@ -42,36 +46,35 @@ class LMS7002_mSPI(LMS7002_base):
             inFile = open(hexFileName, 'r')
         else:
             inFile = hexFileName.split('\n')
-        ret = [0]*16384
+        ret = [0] * 16384
         maxAddr = 0
         for line in inFile:
             line = line.strip()
-            if line=='':
+            if line == '':
                 continue
-            if line[0]!=':':
+            if line[0] != ':':
                 raise ValueError("Line does not start with :. Is this an Intel hex file?")
             lineData = []
-            for i in range(1,len(line),2):
-                lineData.append(int("0x"+line[i:i+2],16))
+            for i in range(1, len(line), 2):
+                lineData.append(int("0x" + line[i:i + 2], 16))
             nBytes = lineData[0]
-            offset = (lineData[1]<<8) + lineData[2]
-            recType = lineData[3]
-            data = lineData[4:4+nBytes]
+            offset = (lineData[1] << 8) + lineData[2]
+            data = lineData[4:4 + nBytes]
             ckSum = 0
-            for i in range(0, len(lineData)-1):
+            for i in range(0, len(lineData) - 1):
                 ckSum += lineData[i]
             ckSum = ~ckSum + 1
-            ckSum = ckSum%256
-            if ckSum != lineData[len(lineData)-1]:
-                raise ValueError("Checksum error in line : "+line)
+            ckSum = ckSum % 256
+            if ckSum != lineData[len(lineData) - 1]:
+                raise ValueError("Checksum error in line : " + line)
             for i in range(0, len(data)):
-                if offset+i>maxAddr:
-                    maxAddr = offset+i
-                ret[offset+i] = data[i]
+                if offset + i > maxAddr:
+                    maxAddr = offset + i
+                ret[offset + i] = data[i]
         if not isString:
             inFile.close()
-        if maxAddr<8192:
-            ret = ret[:8192]    # Discard last 8192 bytes, since they are not used
+        if maxAddr < 8192:
+            ret = ret[:8192]  # Discard last 8192 bytes, since they are not used
         return ret
 
     def loadHex(self, hexFileName, mode='SRAM', isString=False):
@@ -80,7 +83,7 @@ class LMS7002_mSPI(LMS7002_base):
         mcuProgram = self._readHex(hexFileName, isString)
         self.chip._MCUProgram(mcuProgram, mode)
         self.chip.SPIImmediate = immMode
-        
+
     def reset(self):
         """
         Put the MCU in reset, and hold it in reset state
@@ -106,44 +109,44 @@ class LMS7002_mSPI(LMS7002_base):
         self.chip.SPIImmediate = True
         data = self._command([self.getOpCode("RUN_INSTR"), 0, 0], 3)
         self.chip.SPIImmediate = immMode
-        return data[1]*256+data[2]
+        return data[1] * 256 + data[2]
 
     def call(self, data):
         immMode = self.chip.SPIImmediate
         self.chip.SPIImmediate = True
         self.P0 = 0
-        if data!=0:
+        if data != 0:
             self.SPISW_CTRL = 1
         else:
             self.SPISW_CTRL = 0
         self.P0 = data
         self.chip.SPIImmediate = immMode
-        
+
     def waitForMCU(self, timeout=1):
         immMode = self.chip.SPIImmediate
         self.chip.SPIImmediate = True
         t0 = time.time()
-        while time.time()-t0<timeout:
+        while time.time() - t0 < timeout:
             val = self.P1
-            if val!= 0xFF:
+            if val != 0xFF:
                 break
-        if time.time()-t0>timeout:
+        if time.time() - t0 > timeout:
             raise ValueError("Timeout expired in waitForMCU")
         self.chip.SPIImmediate = immMode
         return val
-        
+
     def startDebugMode(self):
         immMode = self.chip.SPIImmediate
         self.chip.SPIImmediate = True
         self.DEBUG = 1
         self.chip.SPIImmediate = immMode
-            
+
     def exitDebugMode(self):
         immMode = self.chip.SPIImmediate
         self.chip.SPIImmediate = True
-        self.DEBUG = 0        
+        self.DEBUG = 0
         self.chip.SPIImmediate = immMode
-        
+
     def _waitUntilWritten(self, timeout=1):
         """
         Waits until WRITE_REQ=1 or timeout expires.
@@ -152,10 +155,10 @@ class LMS7002_mSPI(LMS7002_base):
         immMode = self.chip.SPIImmediate
         self.chip.SPIImmediate = True
         t0 = time.time()
-        while (self.WRITE_REQ==1) and (time.time()-t0<timeout):
+        while (self.WRITE_REQ == 1) and (time.time() - t0 < timeout):
             pass
         self.chip.SPIImmediate = immMode
-        if time.time()-t0>timeout:
+        if time.time() - t0 > timeout:
             raise ValueError("Timeout expired in waitUntilWritten")
 
     def _readOneByte(self, timeout=1):
@@ -166,11 +169,11 @@ class LMS7002_mSPI(LMS7002_base):
         immMode = self.chip.SPIImmediate
         self.chip.SPIImmediate = True
         t0 = time.time()
-        while (self.READ_REQ==0) and (time.time()-t0<timeout):
+        while (self.READ_REQ == 0) and (time.time() - t0 < timeout):
             pass
         data = self.DFM
         self.chip.SPIImmediate = immMode
-        if time.time()-t0>timeout:
+        if time.time() - t0 > timeout:
             raise ValueError("Timeout expired in readOneByte")
         return data
 
@@ -193,18 +196,18 @@ class LMS7002_mSPI(LMS7002_base):
     def _wait(self, n):
         immMode = self.chip.SPIImmediate
         self.chip.SPIImmediate = True
-        for i in range(0, n//64):
-            tmp = self.chip['mSPI_STAT']
+        for i in range(0, n // 64):
+            pass
         self.chip.SPIImmediate = immMode
 
     def changeMCUFrequency(self, value):
-        self._command( [self.getOpCode("SFR"), 0x8E, value], 3)
-        
+        self._command([self.getOpCode("SFR"), 0x8E, value], 3)
+
     def readIRAM(self):
-        data = [0]*256
+        data = [0] * 256
         opCode = self.getOpCode("IRAM_READ")
-        for i in range(0,256):
-            res = self._command( [opCode, i, 0], 3)
+        for i in range(0, 256):
+            res = self._command([opCode, i, 0], 3)
             data[i] = res[2]
             self._wait(64)
         return data
@@ -213,7 +216,7 @@ class LMS7002_mSPI(LMS7002_base):
     # mSPI_P0 (0x0000)
     #
 
-    @property 
+    @property
     def P0(self):
         """
         Get the value of P0<7:0>
@@ -225,7 +228,7 @@ class LMS7002_mSPI(LMS7002_base):
         """
         Set the value of P0<7:0>
         """
-        if not(0<= value <=1023):
+        if not (0 <= value <= 1023):
             raise ValueError("Value must be [0..255]")
         self._writeReg('P0', 'P0<7:0>', value)
 
@@ -233,7 +236,7 @@ class LMS7002_mSPI(LMS7002_base):
     # mSPI_P1 (0x0001)
     #
 
-    @property 
+    @property
     def P1(self):
         """
         Get the value of P1<7:0>
@@ -245,16 +248,16 @@ class LMS7002_mSPI(LMS7002_base):
         """
         Set the value of P1<7:0>
         """
-        if not(0<= value <=255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('P1', 'P1<7:0>', value)
 
     #
     # mSPI_CFG (0x0002)
     #
-    
+
     # RXD
-    @property 
+    @property
     def RXD(self):
         """
         Get the value of RXD
@@ -271,7 +274,7 @@ class LMS7002_mSPI(LMS7002_base):
         self._writeReg('CFG', 'RXD', value)
 
     # DEBUG
-    @property 
+    @property
     def DEBUG(self):
         """
         Get the value of DEBUG
@@ -288,7 +291,7 @@ class LMS7002_mSPI(LMS7002_base):
         self._writeReg('CFG', 'DEBUG', value)
 
     # EXT_INT<5:2>
-    @property 
+    @property
     def EXT_INT(self):
         """
         Get the value of EXT_INT<5:2>
@@ -300,12 +303,12 @@ class LMS7002_mSPI(LMS7002_base):
         """
         Set the value of EXT_INT<5:2>
         """
-        if not(0 <= value <= 15):
+        if not (0 <= value <= 15):
             raise ValueError("Value must be [0..15]")
         self._writeReg('CFG', 'EXT_INT<5:2>', value)
 
     # MODE<1:0>
-    @property 
+    @property
     def MODE(self):
         """
         Get the value of MODE<1:0>
@@ -317,13 +320,13 @@ class LMS7002_mSPI(LMS7002_base):
         """
         Set the value of MODE<1:0>
         """
-        if Mode not in [0, 1,2,3, 'RESET', 'EEPROM_AND_SRAM', 'SRAM', 'SRAM_FROM_EEPROM']:
+        if Mode not in [0, 1, 2, 3, 'RESET', 'EEPROM_AND_SRAM', 'SRAM', 'SRAM_FROM_EEPROM']:
             raise ValueError("Mode should be [0, 1,2,3, 'RESET', 'EEPROM_AND_SRAM', 'SRAM', 'SRAM_FROM_EEPROM']")
-        if Mode==0 or Mode=='RESET':
+        if Mode == 0 or Mode == 'RESET':
             return
-        elif Mode==1 or Mode=='EEPROM_AND_SRAM':
+        elif Mode == 1 or Mode == 'EEPROM_AND_SRAM':
             mode = 1
-        elif Mode==2 or Mode=='SRAM':
+        elif Mode == 2 or Mode == 'SRAM':
             mode = 2
         else:
             mode = 3
@@ -334,7 +337,7 @@ class LMS7002_mSPI(LMS7002_base):
     #
 
     # TXD
-    @property 
+    @property
     def TXD(self):
         """
         Get the value of TXD
@@ -351,7 +354,7 @@ class LMS7002_mSPI(LMS7002_base):
         self._writeReg('STAT', 'TXD', value)
 
     # PROGRAMMED
-    @property 
+    @property
     def PROGRAMMED(self):
         """
         Get the value of PROGRAMMED
@@ -359,7 +362,7 @@ class LMS7002_mSPI(LMS7002_base):
         return self._readReg('STAT', 'PROGRAMMED')
 
     # READ_REQ
-    @property 
+    @property
     def READ_REQ(self):
         """
         Get the value of READ_REQ
@@ -376,7 +379,7 @@ class LMS7002_mSPI(LMS7002_base):
         self._writeReg('STAT', 'READ_REQ', value)
 
     # WRITE_REQ
-    @property 
+    @property
     def WRITE_REQ(self):
         """
         Get the value of WRITE_REQ
@@ -393,7 +396,7 @@ class LMS7002_mSPI(LMS7002_base):
         self._writeReg('STAT', 'WRITE_REQ', value)
 
     # FULL_WRITE_BUFF
-    @property 
+    @property
     def FULL_WRITE_BUFF(self):
         """
         Get the value of FULL_WRITE_BUFF
@@ -410,7 +413,7 @@ class LMS7002_mSPI(LMS7002_base):
         self._writeReg('STAT', 'FULL_WRITE_BUFF', value)
 
     # EMPTY_WRITE_BUFF
-    @property 
+    @property
     def EMPTY_WRITE_BUFF(self):
         """
         Get the value of EMPTY_WRITE_BUFF
@@ -429,7 +432,7 @@ class LMS7002_mSPI(LMS7002_base):
     #
     # mSPI_DTM (0x0004)
     #
-    @property 
+    @property
     def DTM(self):
         """
         Get the value of DTM<7:0>
@@ -441,14 +444,14 @@ class LMS7002_mSPI(LMS7002_base):
         """
         Set the value of DTM<7:0>
         """
-        if not(0<= value <=255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('DTM', 'DTM<7:0>', value)
 
     #
     # mSPI_DFM (0x0005)
     #
-    @property 
+    @property
     def DFM(self):
         """
         Get the value of DFM<7:0>
@@ -460,7 +463,7 @@ class LMS7002_mSPI(LMS7002_base):
         """
         Set the value of DFM<7:0>
         """
-        if not(0<= value <=255):
+        if not (0 <= value <= 255):
             raise ValueError("Value must be [0..255]")
         self._writeReg('DFM', 'DFM<7:0>', value)
 
@@ -469,7 +472,7 @@ class LMS7002_mSPI(LMS7002_base):
     #
 
     # SPISW_CTRL
-    @property 
+    @property
     def SPISW_CTRL(self):
         """
         Get the value of SPISW_CTRL
@@ -489,7 +492,8 @@ class LMS7002_mSPI(LMS7002_base):
             val = 1
         self._writeReg('SPISW', 'SPISW_CTRL', val)
 
-    def getProductionTestHex(self):
+    @staticmethod
+    def getProductionTestHex():
         return """:06000000020041020108AC
         :03000B00020412DA
         :03001300020120C7
@@ -579,5 +583,4 @@ class LMS7002_mSPI(LMS7002_base):
         :0D004100758120120971E582600302003E06
         :040971007582002269
         :00000001FF
-        """    
-    
+        """

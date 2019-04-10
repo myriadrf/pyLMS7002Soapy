@@ -20,11 +20,11 @@ for high level functions, such as reading samples.
 
 The pyLMS7002Soapy package is installed in a usual way:
 
-  python setup.py install
+  python3 setup.py install
 
 Module installation can be verified from Python:
 
-  python
+  python3
   >>> from pyLMS7002Soapy import *
 
 If there is no error, the module is correctly installed.
@@ -38,4 +38,4 @@ Scalar network analyzer is preferred for measurements and is much faster than VN
 
 ## Licensing
 
-pyLMS7002Soapy is copyright 2018 Lime Microsystems and provided under the Apache 2.0 License.
+pyLMS7002Soapy is copyright 2019 Lime Microsystems and provided under the Apache 2.0 License.

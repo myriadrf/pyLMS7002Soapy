@@ -1,27 +1,29 @@
-#***************************************************************
-#* Name:      LMS7002_XBUF.py
-#* Purpose:   Class implementing LMS7002 XBUF functions
-#* Author:    Lime Microsystems ()
-#* Created:   2016-11-14
-#* Copyright: Lime Microsystems (limemicro.com)
-#* License:
-#**************************************************************
+# ***************************************************************
+# * Name:      LMS7002_XBUF.py
+# * Purpose:   Class implementing LMS7002 XBUF functions
+# * Author:    Lime Microsystems ()
+# * Created:   2016-11-14
+# * Copyright: Lime Microsystems (limemicro.com)
+# * License:
+# **************************************************************
 
-from LMS7002_base import *
+from pyLMS7002Soapy.LMS7002_base import LMS7002_base
+
 
 class LMS7002_XBUF(LMS7002_base):
-    __slots__ = []    # Used to generate error on typos
+    __slots__ = []  # Used to generate error on typos
+
     def __init__(self, chip):
         self.chip = chip
         self.channel = None
         self.prefix = "XBUF_"
-        
+
     #
     # XBUF_CFG (0x0085)
     #
 
     # SLFB_XBUF_RX
-    @property 
+    @property
     def SLFB_XBUF_RX(self):
         """
         Get the value of SLFB_XBUF_RX
@@ -38,7 +40,7 @@ class LMS7002_XBUF(LMS7002_base):
         self._writeReg('CFG', 'SLFB_XBUF_RX', value)
 
     # SLFB_XBUF_TX
-    @property 
+    @property
     def SLFB_XBUF_TX(self):
         """
         Get the value of SLFB_XBUF_TX
@@ -55,7 +57,7 @@ class LMS7002_XBUF(LMS7002_base):
         self._writeReg('CFG', 'SLFB_XBUF_TX', value)
 
     # BYP_XBUF_RX
-    @property 
+    @property
     def BYP_XBUF_RX(self):
         """
         Get the value of BYP_XBUF_RX
@@ -72,7 +74,7 @@ class LMS7002_XBUF(LMS7002_base):
         self._writeReg('CFG', 'BYP_XBUF_RX', value)
 
     # BYP_XBUF_TX
-    @property 
+    @property
     def BYP_XBUF_TX(self):
         """
         Get the value of BYP_XBUF_TX
@@ -89,7 +91,7 @@ class LMS7002_XBUF(LMS7002_base):
         self._writeReg('CFG', 'BYP_XBUF_TX', value)
 
     # EN_OUT2_XBUF_TX
-    @property 
+    @property
     def EN_OUT2_XBUF_TX(self):
         """
         Get the value of EN_OUT2_XBUF_TX
@@ -106,7 +108,7 @@ class LMS7002_XBUF(LMS7002_base):
         self._writeReg('CFG', 'EN_OUT2_XBUF_TX', value)
 
     # EN_TBUFIN_XBUF_RX
-    @property 
+    @property
     def EN_TBUFIN_XBUF_RX(self):
         """
         Get the value of EN_TBUFIN_XBUF_RX
@@ -123,7 +125,7 @@ class LMS7002_XBUF(LMS7002_base):
         self._writeReg('CFG', 'EN_TBUFIN_XBUF_RX', value)
 
     # PD_XBUF_RX
-    @property 
+    @property
     def PD_XBUF_RX(self):
         """
         Get the value of PD_XBUF_RX
@@ -140,7 +142,7 @@ class LMS7002_XBUF(LMS7002_base):
         self._writeReg('CFG', 'PD_XBUF_RX', value)
 
     # PD_XBUF_TX
-    @property 
+    @property
     def PD_XBUF_TX(self):
         """
         Get the value of PD_XBUF_TX
@@ -157,7 +159,7 @@ class LMS7002_XBUF(LMS7002_base):
         self._writeReg('CFG', 'PD_XBUF_TX', value)
 
     # EN_G_XBUF
-    @property 
+    @property
     def EN_G_XBUF(self):
         """
         Get the value of EN_G_XBUF
@@ -172,5 +174,3 @@ class LMS7002_XBUF(LMS7002_base):
         if value not in [0, 1]:
             raise ValueError("Value must be [0,1]")
         self._writeReg('CFG', 'EN_G_XBUF', value)
-
-
