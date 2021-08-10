@@ -111,7 +111,7 @@ class pyLMS7002Soapy(object):
 
     @property
     def rxRfFreq(self):
-        self.sdr.getFrequency(SOAPY_SDR_RX, self.channel, 'RF')
+        return self.sdr.getFrequency(SOAPY_SDR_RX, self.channel, 'RF')
 
     @rxRfFreq.setter
     def rxRfFreq(self, freq):
@@ -123,7 +123,7 @@ class pyLMS7002Soapy(object):
 
     @property
     def rxNCOFreq(self):
-        self.sdr.getFrequency(SOAPY_SDR_RX, self.channel, 'BB')
+        return self.sdr.getFrequency(SOAPY_SDR_RX, self.channel, 'BB')
 
     @rxNCOFreq.setter
     def rxNCOFreq(self, freq):
